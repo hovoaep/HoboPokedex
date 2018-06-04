@@ -3,25 +3,29 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { likePokemon, unLikePokemon } from "../../actions/authActions";
 import PokemonStates from "./PokemonStates";
-import Like from "./Like";
-import classnames from "classnames";
+
 class Pokemon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      like: "far fa-heart",
+      like: false,
       pokemonImage: null,
       pokemonStats: [],
       pokemonTypes: [],
-      name: "",
-      likes: []
+      name: ""
     };
   }
   componentDidMount() {
-    console.log(this.props.url);
     axios
       .get(this.props.url)
       .then(res => {
+        let id = res.data.id.toString();
+        let likes = this.props.auth.user.likes;
+        console.log(likes.includes(id));
+        if (likes.includes(id)) {
+          console.log("xxxx");
+          this.setState({ like: true });
+        }
         this.setState({
           pokemonImage: res.data.sprites.front_default,
           pokemonStats: res.data.stats,
@@ -36,19 +40,23 @@ class Pokemon extends Component {
 
   onHeartClick = () => {
     if (this.props.auth.isAuthenticated) {
+      console.log(this.props);
       let pokemonData = {};
-      let pokemonId = this.props.url.substring(34, this.props.url.length - 1);
+      let pokemonId = this.props.url.substring(34, 35);
       let id = this.props.auth.user.id;
       pokemonData.id = id;
       pokemonData.pokemonId = pokemonId;
-      if (this.props.auth.user.likes.indexOf(pokemonId) !== -1) {
+      console.log(pokemonId);
+      let likes = this.props.auth.user.likes;
+      if (likes.includes(pokemonId)) {
         console.log("unlike");
         this.props.unLikePokemon(pokemonData);
-        this.setState({ like: "far fa-heart" });
+        this.setState({ like: false });
       } else {
         console.log("like");
         this.props.likePokemon(pokemonData);
-        this.setState({ like: "fas fa-heart" });
+        console.log(111111);
+        this.setState({ like: true });
       }
     } else {
       alert("You need authenticated");
@@ -63,9 +71,9 @@ class Pokemon extends Component {
     ) : (
       <span>Loading ...</span>
     );
+
     return (
       <div
-        onClick={this.onHeartClick}
         className="card mr-2"
         style={{ width: "200px", display: "inline-block" }}
       >
@@ -80,16 +88,11 @@ class Pokemon extends Component {
             <PokemonStates states={this.state.pokemonStats} />
             {PokemonTypesTags}
           </div>
-          <a onClick={this.props.click}>
-            {/* <i className={likeCLass} /> Like */}
-            {this.state.like ? (
-              <i className="fas fa-heart" />
-            ) : (
-              <i className="far fa-heart" />
-            )}
-            {Like}
-          </a>
         </div>
+        <a onClick={this.onHeartClick}>
+          <span />
+          {this.state.like ? "unLike" : "like"}
+        </a>
       </div>
     );
   }

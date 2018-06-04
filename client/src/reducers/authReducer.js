@@ -20,14 +20,19 @@ export default function(state = initialState, action) {
         user: action.payload
       };
     case LIKE_POKEMON:
-      state.user.likes = action.payload;
-      return {
-        ...state
-      };
+      // let likes = state.user.likes;
+      // likes = action.payload;
+
+      let newState = { ...state };
+      newState.user.likes = action.payload;
+      return newState;
     case UNLIKE_POKEMON:
+      // likes = action.payload;
+
       state.user.likes = action.payload;
       return {
         ...state
+        // likes
       };
     default:
       return state;

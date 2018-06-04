@@ -3,21 +3,25 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Pokemon from "../pokemons/Pokemon";
 import Spinner from "../common/Spinner";
+import { bindActionCreators } from "redux";
+import { setCurrentUser } from "../../actions/authActions";
 // import { Link } from "react-router-dom";
 
 class Profile extends Component {
   render() {
+    console.log("render8");
     const pokemons = this.props.auth.user.likes.map(item => {
       return `https://pokeapi.co/api/v2/pokemon/${Number(item)}`;
     });
     console.log(pokemons.length);
-    const PokemonCardList = pokemons.length ? (
+    var PokemonCardList = pokemons.length ? (
       pokemons.map((pokemon, i) => <Pokemon key={i} url={pokemon} />)
     ) : (
       <div>
         <Spinner />
       </div>
     );
+    console.log(PokemonCardList);
     const { user } = this.props.auth;
     // let profileContent;
     console.log(this.props);
@@ -41,8 +45,15 @@ Profile.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setCurrentUser
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

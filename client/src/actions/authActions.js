@@ -5,11 +5,12 @@ import jwt_decode from "jwt-decode";
 import {
   GET_ERRORS,
   SET_CURRENT_USER,
+  CLEAR_CURRENT_PROFILE,
   LIKE_POKEMON,
   UNLIKE_POKEMON
 } from "./types";
 
-// Register User
+// Register UserSET_CU
 export const registerUser = (userData, history) => dispatch => {
   axios
     .post("/api/users/register", userData)
@@ -64,16 +65,27 @@ export const logoutUser = () => dispatch => {
   dispatch(setCurrentUser({}));
 };
 
+export const clearCurrentProfile = () => {
+  return {
+    type: CLEAR_CURRENT_PROFILE
+  };
+};
+
 export const likePokemon = data => dispatch => {
   const { id, pokemonId } = data;
   axios
     .post(`/api/users/like/${id}/${pokemonId}`)
     .then(res => {
+      const { token } = res.data;
+      localStorage.setItem("jwtToken", token);
+      setAuthToken(token);
+      const decoded = jwt_decode(token);
+      dispatch(setCurrentUser(decoded));
       console.log(res);
-      dispatch({
-        type: LIKE_POKEMON,
-        payload: res.data
-      });
+      // dispatch({
+      //   type: LIKE_POKEMON,
+      //   payload: res.data
+      // });
     })
     .catch(err =>
       dispatch({

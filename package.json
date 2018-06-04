@@ -1,7 +1,7 @@
 {
-  "name": "mern",
+  "name": "HoboPokedex",
   "version": "1.0.0",
-  "description": "Mern social network",
+  "description": "HoboPokedex",
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",

@@ -104,7 +104,18 @@ router.post(
     User.findById({ _id: userId }).then(user => {
       user.likes.push(pokemonId);
       user.save();
-      res.json(user.likes);
+      const payload = {
+        id: user.id,
+        name: user.name,
+        likes: user.likes
+      };
+      jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+        res.json({
+          // success: true,
+          token: "Bearer " + token
+        });
+      });
+      // res.json(user.likes);
     });
   }
 );

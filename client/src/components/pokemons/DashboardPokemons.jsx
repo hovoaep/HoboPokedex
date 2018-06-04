@@ -94,7 +94,7 @@ class DashboardPokemons extends Component {
   render() {
     const PokemonCardList = this.state.pokemonList.length ? (
       this.state.pokemonList.map((pokemon, i) => (
-        <Pokemon name={pokemon.name} key={i} url={pokemon.url} />
+        <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
       ))
     ) : (
       <div>
@@ -108,8 +108,10 @@ class DashboardPokemons extends Component {
           <input
             type="search"
             name="search"
+            className="form-control"
             value={this.state.search}
             onChange={this.onChange}
+            placeholder="Search by type"
           />
         </form>
         <div className="pokemonList">{PokemonCardList}</div>
