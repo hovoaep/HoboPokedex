@@ -1,0 +1,33 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.6.1",
+    "axios": "^0.18.0",
+    "bootstrap": "^4.1.1",
+    "bootstrap-less": "^3.3.8",
+    "classnames": "^2.2.5",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.10",
+    "react": "^16.4.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-addons-update": "^15.6.2",
+    "react-dom": "^16.4.0",
+    "react-js-pagination": "^3.0.2",
+    "react-pose": "^2.0.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^3.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:5000"
+}
