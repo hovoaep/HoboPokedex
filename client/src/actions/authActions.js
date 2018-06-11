@@ -47,7 +47,6 @@ export const loginUser = userData => dispatch => {
     );
 };
 
-// Set logged in user
 export const setCurrentUser = decoded => {
   return {
     type: SET_CURRENT_USER,
@@ -57,11 +56,8 @@ export const setCurrentUser = decoded => {
 
 // Log user out
 export const logoutUser = () => dispatch => {
-  // Remove token from localStorage
   localStorage.removeItem("jwtToken");
-  // Remove auth header for future requests
   setAuthToken(false);
-  // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
 };
 
@@ -73,6 +69,7 @@ export const clearCurrentProfile = () => {
 
 export const likePokemon = data => dispatch => {
   const { id, pokemonId } = data;
+  console.log(data);
   axios
     .post(`/api/users/like/${id}/${pokemonId}`)
     .then(res => {

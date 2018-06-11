@@ -3,6 +3,7 @@ import axios from "axios";
 import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
+import FilterPokemon from "./FilterPokemon";
 class DashboardPokemons extends Component {
   constructor() {
     super();
@@ -14,14 +15,27 @@ class DashboardPokemons extends Component {
       pageSize: 10,
       page: 1,
       disablePagination: false,
-      search: ""
+      search: "",
+      pokemonTypes: []
     };
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
     this.fetchPokemons = this.fetchPokemons.bind(this);
+    this.fetchSelectsValue = this.fetchSelectsValue.bind(this);
   }
   componentWillMount() {
     this.fetchPokemons(this.state.page, this.state.pageSize);
+    this.fetchSelectsValue();
+  }
+  fetchSelectsValue() {
+    axios
+      .get(`https://pokeapi.co/api/v2/type`)
+      .then(res => {
+        console.log(res);
+        res.data.results
+          .filter(item => item.name != "unknown")
+          .forEach(item => this.state.pokemonTypes.push(item.name));
+      })
+      .catch(err => console.log(err));
   }
 
   fetchPokemons(page, pageSize) {
@@ -62,7 +76,7 @@ class DashboardPokemons extends Component {
 
   handlePageChange = pageNumber => {
     this.setState({ page: pageNumber });
-    if (this.state.serach) {
+    if (this.state.search) {
       let length = pageNumber * this.state.pageSize;
       let newPokemons = this.state.pokemonListAll.slice(length, length + 10);
       this.setState({ pokemonList: newPokemons });
@@ -71,13 +85,8 @@ class DashboardPokemons extends Component {
     }
   };
 
-  onSubmit(e) {
-    e.preventDefault();
-    this.fetchPokemons(this.state.page, this.state.pageSize);
-  }
-
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value.toLowerCase() });
   }
 
   onSelectChange = event => {
@@ -88,6 +97,13 @@ class DashboardPokemons extends Component {
       } else {
         this.handlePageChange(this.state.page);
       }
+    });
+  };
+
+  onSelectTypeChange = evt => {
+    this.setState({ page: 1 });
+    this.setState({ search: evt.target.value }, () => {
+      this.fetchPokemons(this.state.page, this.state.pageSize);
     });
   };
 
@@ -102,18 +118,24 @@ class DashboardPokemons extends Component {
       </div>
     );
 
+    const pokemonTypes = this.state.pokemonTypes.length ? (
+      this.state.pokemonTypes.map(item => (
+        <option key={item} val={item}>
+          {item}
+        </option>
+      ))
+    ) : (
+      <option>Loading...</option>
+    );
     return (
       <div>
-        <form onSubmit={this.onSubmit}>
-          <input
-            type="search"
-            name="search"
-            className="form-control"
-            value={this.state.search}
-            onChange={this.onChange}
-            placeholder="Search by type"
-          />
-        </form>
+        <select
+          onChange={this.onSelectTypeChange}
+          className="form-control mb-2"
+          style={{ width: "100%" }}
+        >
+          {pokemonTypes}
+        </select>
         <div className="pokemonList">{PokemonCardList}</div>
         <div
           style={{ display: "flex", justifyContent: "center" }}
@@ -121,7 +143,7 @@ class DashboardPokemons extends Component {
         >
           <Pagination
             activePage={this.state.page}
-            itemsCountPerPage={this.state.pageSize}
+            itemsCountPerPage={this.state.pageSize - 1}
             totalItemsCount={this.state.totalPokemon}
             pageRangeDisplayed={5}
             onChange={this.handlePageChange}

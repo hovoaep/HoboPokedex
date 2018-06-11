@@ -19,12 +19,13 @@ class Pokemon extends Component {
     axios
       .get(this.props.url)
       .then(res => {
+        console.log(this.props.auth.isAuthenticated);
         let id = res.data.id.toString();
         let likes = this.props.auth.user.likes;
-        console.log(likes.includes(id));
-        if (likes.includes(id)) {
-          console.log("xxxx");
-          this.setState({ like: true });
+        if (this.props.auth.isAuthenticated) {
+          if (likes.includes(id)) {
+            this.setState({ like: true });
+          }
         }
         this.setState({
           pokemonImage: res.data.sprites.front_default,
@@ -41,21 +42,22 @@ class Pokemon extends Component {
   onHeartClick = () => {
     if (this.props.auth.isAuthenticated) {
       console.log(this.props);
+      console.log(this.props.url);
       let pokemonData = {};
-      let pokemonId = this.props.url.substring(34, 35);
+      let pokemonId = this.props.url.substring(34, this.props.url.length - 1);
       let id = this.props.auth.user.id;
       pokemonData.id = id;
       pokemonData.pokemonId = pokemonId;
-      console.log(pokemonId);
+      // console.log(pokemonId);
       let likes = this.props.auth.user.likes;
       if (likes.includes(pokemonId)) {
-        console.log("unlike");
+        // console.log("unlike");
         this.props.unLikePokemon(pokemonData);
         this.setState({ like: false });
       } else {
-        console.log("like");
+        // console.log("like");
         this.props.likePokemon(pokemonData);
-        console.log(111111);
+        // console.log(111111);
         this.setState({ like: true });
       }
     } else {
@@ -74,8 +76,8 @@ class Pokemon extends Component {
 
     return (
       <div
-        className="card mr-2"
-        style={{ width: "200px", display: "inline-block" }}
+        className="card mr-2 mb-2"
+        style={{ width: "210px", display: "inline-block" }}
       >
         <img
           className="card-img-top"
@@ -103,6 +105,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { likePokemon, unLikePokemon })(
-  Pokemon
-);
+export default connect(
+  mapStateToProps,
+  { likePokemon, unLikePokemon }
+)(Pokemon);
