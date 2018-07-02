@@ -23,17 +23,19 @@ class DashboardPokemons extends Component {
     this.fetchSelectsValue = this.fetchSelectsValue.bind(this);
   }
   componentWillMount() {
-    this.fetchPokemons(this.state.page, this.state.pageSize);
     this.fetchSelectsValue();
+    this.fetchPokemons(this.state.page, this.state.pageSize);
   }
   fetchSelectsValue() {
     axios
       .get(`https://pokeapi.co/api/v2/type`)
       .then(res => {
         console.log(res);
+        let temp = [];
         res.data.results
           .filter(item => item.name != "unknown")
-          .forEach(item => this.state.pokemonTypes.push(item.name));
+          .forEach(item => temp.push(item.name));
+        this.setState({ pokemonTypes: temp });
       })
       .catch(err => console.log(err));
   }

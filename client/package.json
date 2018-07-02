@@ -20,8 +20,10 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
+    "react-slick": "^0.23.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^3.3.0"
   },
   "scripts": {

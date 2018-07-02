@@ -71,3 +71,42 @@ img {
 .form-control::placeholder {
   color: #bbb !important;
 }
+
+.slick-prev {
+  left: -2px !important;
+  z-index: 6;
+}
+
+.slick-next {
+  right: -2px !important;
+}
+
+.slick-next:before,
+.slick-prev:before {
+  color: #000000 !important;
+}
+
+.pokemonList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.slick-arrow {
+  /* display: none !important; */
+  opacity: 0;
+  transition: all 0.3s;
+  transition-timing-function: ease-out;
+}
+
+.slick-slider:hover .slick-arrow {
+  opacity: 1;
+  /* display: block !important; */
+}
+
+.pokemonType {
+  background-color: #17a2b8;
+  margin-right: 5px;
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 5px;
+}
