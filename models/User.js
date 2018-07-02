@@ -22,6 +22,12 @@ const UserSchema = new Schema({
   },
   likes: {
     type: Array
+  },
+  active: {
+    type: Boolean
+  },
+  activeToken: {
+    type: String
   }
 });
 
