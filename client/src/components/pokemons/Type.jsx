@@ -6,8 +6,8 @@ export default props => {
   const color = getTypeColor(props.type);
   return (
     <div>
-      <li class="background-color-grass" style={{ backgroundColor: color }}>
-        <Link to={`dashboard/${props.type}`}>{props.type}</Link>
+      <li className="background-color-grass" style={{ backgroundColor: color }}>
+        <Link to={`/dashboard?type=${props.type}`}>{props.type}</Link>
       </li>
     </div>
   );

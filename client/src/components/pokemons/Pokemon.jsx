@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { likePokemon, unLikePokemon } from "../../actions/authActions";
 import PokemonStates from "./PokemonStates";
 import Slider from "react-slick";
+import Type from "./Type";
 
 class Pokemon extends Component {
   constructor(props) {
@@ -64,9 +65,7 @@ class Pokemon extends Component {
   render() {
     const PokemonTypesTags = this.state.pokemonTypes.length ? (
       this.state.pokemonTypes.map((pokemonType, i) => (
-        <span className="pokemonType" key={i}>
-          {pokemonType.type.name}
-        </span>
+        <Type type={pokemonType.type.name} key={i} />
       ))
     ) : (
       <div
@@ -117,8 +116,10 @@ class Pokemon extends Component {
             <div>
               <h5 className="card-title">{this.state.name.toUpperCase()}</h5>
               <div className="card-text">
-                {/* <PokemonStates states={this.state.pokemonStats} /> */}
-                {PokemonTypesTags}
+                <ul>
+                  {/* <PokemonStates states={this.state.pokemonStats} /> */}
+                  {PokemonTypesTags}
+                </ul>
               </div>
             </div>
           </div>

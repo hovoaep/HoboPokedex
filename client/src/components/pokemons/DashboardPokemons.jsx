@@ -22,20 +22,63 @@ class DashboardPokemons extends Component {
     this.onChange = this.onChange.bind(this);
   }
   componentWillMount() {
-    // let url = new URLSearchParams(this.props.location.search);
-    // let type = url.get("type");
-    // console.log(type);
+    let url = new URLSearchParams(this.props.location.search);
+    let type = url.get("type");
+    console.log(type);
     console.log(this.props.location);
     fetchPokemons(0, 0, "type", pokemonTypes =>
       this.setState({ pokemonTypes })
     );
-    fetchPokemons(
-      this.state.page,
-      this.state.pageSize,
-      "",
-      (pokemonList, totalPokemon) =>
-        this.setState({ pokemonList, totalPokemon })
-    );
+    if (type) {
+      fetchPokemons(
+        this.state.page,
+        this.state.pageSize,
+        "search",
+        pokemonListAll =>
+          this.setState({
+            pokemonListAll,
+            totalPokemon: pokemonListAll.length,
+            pokemonList: pokemonListAll.slice(0, this.state.pageSize),
+            search: type
+          }),
+        "",
+        type
+      );
+    } else {
+      fetchPokemons(
+        this.state.page,
+        this.state.pageSize,
+        "",
+        (pokemonList, totalPokemon) =>
+          this.setState({ pokemonList, totalPokemon })
+      );
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log(nextProps);
+    console.log("essss");
+
+    let url = new URLSearchParams(nextProps.location.search);
+    let type = url.get("type");
+    let reality = this.state.search !== type;
+    if (reality) {
+      fetchPokemons(
+        this.state.page,
+        this.state.pageSize,
+        "search",
+        pokemonListAll =>
+          this.setState({
+            pokemonListAll,
+            totalPokemon: pokemonListAll.length,
+            pokemonList: pokemonListAll.slice(0, this.state.pageSize),
+            search: type
+          }),
+        "",
+        type
+      );
+    }
+    return reality;
   }
 
   onChange(e) {
