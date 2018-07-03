@@ -56,3 +56,44 @@ export const fetchPokemons = function(
       console.log("err", err);
     });
 };
+
+export const getTypeColor = typeName => {
+  switch (typeName) {
+    case "water":
+      return "#67B3EC";
+    case "grass":
+      return "#7AC657";
+    case "electric":
+      return "#F8E075";
+    case "ground":
+      return "#CBAB82";
+    case "poison":
+      return "#DDB0CB";
+    case "bug":
+      return "#A8B732";
+    case "flying":
+      return "#8E8BD1";
+    case "fighting":
+      return "#BE322E";
+    case "fire":
+      return "#EE803B";
+    case "steel":
+      return "#B8B8CF";
+    case "rock":
+      return "#B79F41";
+    case "ghost":
+      return "#705A96";
+    case "psychic":
+      return "#F65B89";
+    case "ice":
+      return "#9AD8D7";
+    case "dragon":
+      return "#7043F4";
+    case "dark":
+      return "#8D8D8D";
+    case "fairy":
+      return "#FD6AD3";
+    default:
+      return "#d0cece";
+  }
+};

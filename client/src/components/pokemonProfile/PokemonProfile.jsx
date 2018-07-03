@@ -3,6 +3,7 @@ import { Bar, Line, Pie } from "react-chartjs-2";
 import PokemonImageSlider from "../pokemons/PokemonImageSlider";
 import { fetchPokemons } from "../helpers/helper";
 import Spinner from "../common/Spinner";
+import Type from "../pokemons/Type";
 
 class PokemonProfile extends Component {
   constructor() {
@@ -10,8 +11,10 @@ class PokemonProfile extends Component {
     this.state = {
       loading: false,
       pokemonName: "",
+      type: [],
       images: [],
-      pokemonChartData: {}
+      pokemonChartData: {},
+      evolutionChain: []
     };
   }
   componentWillMount() {
@@ -22,6 +25,9 @@ class PokemonProfile extends Component {
       "pokemon",
       data => {
         console.log(data);
+        let type = [];
+        data.types.forEach(item => type.push(item.type.name));
+        console.log(type, "type");
         let temp = {
           datasets: [
             {
@@ -49,7 +55,8 @@ class PokemonProfile extends Component {
           pokemonChartData: temp,
           loading: true,
           images: images,
-          pokemonName: data.name
+          pokemonName: data.name,
+          type
         });
         return;
       },
@@ -69,11 +76,14 @@ class PokemonProfile extends Component {
     ) : (
       <span>Nothing</span>
     );
+    const type = this.state.type.map(item => <Type type={item} />);
+
     return (
       <div>
         {this.state.loading ? (
           <div>
             <h1>{this.state.pokemonName.toUpperCase()}</h1>
+            {type}
             <div className="col-md-4">
               {this.state.loading && (
                 <PokemonImageSlider images={this.state.images} />

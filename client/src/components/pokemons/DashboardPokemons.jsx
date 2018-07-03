@@ -22,6 +22,10 @@ class DashboardPokemons extends Component {
     this.onChange = this.onChange.bind(this);
   }
   componentWillMount() {
+    // let url = new URLSearchParams(this.props.location.search);
+    // let type = url.get("type");
+    // console.log(type);
+    console.log(this.props.location);
     fetchPokemons(0, 0, "type", pokemonTypes =>
       this.setState({ pokemonTypes })
     );
