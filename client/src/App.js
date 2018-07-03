@@ -19,6 +19,7 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import DashboardPokemons from "./components/pokemons/DashboardPokemons";
 import Profile from "./components/profile/Profile";
+import PokemonProfile from "./components/pokemonProfile/PokemonProfile";
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -44,6 +45,7 @@ class App extends Component {
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/dashboard" component={DashboardPokemons} />
+              <Route exact path="/pokemon/:id" component={PokemonProfile} />
               <Switch>
                 <PrivateRoute exact path="/profile" component={Profile} />
               </Switch>

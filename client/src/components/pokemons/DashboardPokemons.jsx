@@ -4,6 +4,8 @@ import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
 import FilterPokemon from "./FilterPokemon";
+import { fetchPokemons } from "../helpers/helper";
+
 class DashboardPokemons extends Component {
   constructor() {
     super();
@@ -19,83 +21,54 @@ class DashboardPokemons extends Component {
       pokemonTypes: []
     };
     this.onChange = this.onChange.bind(this);
-    this.fetchPokemons = this.fetchPokemons.bind(this);
-    this.fetchSelectsValue = this.fetchSelectsValue.bind(this);
   }
   componentWillMount() {
-    this.fetchSelectsValue();
-    this.fetchPokemons(this.state.page, this.state.pageSize);
+    fetchPokemons(0, 0, "type", pokemonTypes =>
+      this.setState({ pokemonTypes })
+    );
+    fetchPokemons(
+      this.state.page,
+      this.state.pageSize,
+      "",
+      (pokemonList, totalPokemon) =>
+        this.setState({ pokemonList, totalPokemon })
+    );
   }
-  fetchSelectsValue() {
-    axios
-      .get(`https://pokeapi.co/api/v2/type`)
-      .then(res => {
-        console.log(res);
-        let temp = [];
-        res.data.results
-          .filter(item => item.name != "unknown")
-          .forEach(item => temp.push(item.name));
-        this.setState({ pokemonTypes: temp });
-      })
-      .catch(err => console.log(err));
-  }
-
-  fetchPokemons(page, pageSize) {
-    this.setState({ pokemonList: [] });
-    let api = "https://pokeapi.co/api/v2";
-    if (this.state.search) {
-      api = `${api}/type/${this.state.search}`;
-    } else {
-      api = `${api}/pokemon`;
-    }
-    axios
-      .get(`${api}?limit=${pageSize}&offset=${(page - 1) * pageSize}`)
-      .then(res => {
-        if (this.state.search) {
-          let newPokemons = [];
-          for (let i = 0; i < res.data.pokemon.length; i++) {
-            let temp = {};
-            temp.name = res.data.pokemon[i].pokemon.name;
-            temp.url = res.data.pokemon[i].pokemon.url;
-            newPokemons.push(temp);
-          }
-          this.setState({
-            pokemonListAll: newPokemons,
-            totalPokemon: newPokemons.length,
-            pokemonList: newPokemons.slice(0, this.state.pageSize)
-          });
-        } else {
-          this.setState({
-            pokemonList: res.data.results,
-            totalPokemon: res.data.count
-          });
-        }
-      })
-      .catch(err => {
-        console.log("err", err);
-      });
-  }
-
-  handlePageChange = pageNumber => {
-    this.setState({ page: pageNumber });
-    if (this.state.search) {
-      let length = pageNumber * this.state.pageSize;
-      let newPokemons = this.state.pokemonListAll.slice(length, length + 10);
-      this.setState({ pokemonList: newPokemons });
-    } else {
-      this.fetchPokemons(pageNumber, this.state.pageSize);
-    }
-  };
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value.toLowerCase() });
   }
 
+  handlePageChange = pageNumber => {
+    console.log(pageNumber);
+    this.setState({ page: pageNumber }, () => {
+      if (this.state.search) {
+        let length = pageNumber * this.state.pageSize;
+        let newPokemons = this.state.pokemonListAll.slice(length, length + 10);
+        this.setState({ pokemonList: newPokemons });
+      } else {
+        fetchPokemons(
+          this.state.page,
+          this.state.pageSize,
+          this.state.search,
+          (pokemonList, totalPokemon) =>
+            this.setState({ pokemonList, totalPokemon })
+        );
+      }
+    });
+  };
+
   onSelectChange = event => {
     let newPageSize = Number(event.target.value);
-    this.setState({ pageSize: newPageSize }, () => {
+    this.setState({ pageSize: newPageSize, page: 1 }, () => {
       if (!this.state.search) {
-        this.fetchPokemons(this.state.page, this.state.pageSize);
+        fetchPokemons(
+          this.state.page,
+          this.state.pageSize,
+          this.state.search,
+          (pokemonList, totalPokemon) =>
+            this.setState({ pokemonList, totalPokemon })
+        );
       } else {
         this.handlePageChange(this.state.page);
       }
@@ -103,10 +76,20 @@ class DashboardPokemons extends Component {
   };
 
   onSelectTypeChange = evt => {
-    this.setState({ page: 1 });
-    this.setState({ search: evt.target.value }, () => {
-      this.fetchPokemons(this.state.page, this.state.pageSize);
-    });
+    this.setState({ page: 1, search: evt.target.value });
+    fetchPokemons(
+      this.state.page,
+      this.state.pageSize,
+      "search",
+      pokemonListAll =>
+        this.setState({
+          pokemonListAll,
+          totalPokemon: pokemonListAll.length,
+          pokemonList: pokemonListAll.slice(0, this.state.pageSize)
+        }),
+      "",
+      evt.target.value
+    );
   };
 
   render() {

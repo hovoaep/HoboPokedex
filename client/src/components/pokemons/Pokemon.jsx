@@ -20,7 +20,6 @@ class Pokemon extends Component {
     axios
       .get(this.props.url)
       .then(res => {
-        console.log(res.data.sprites);
         let id = res.data.id.toString();
         let likes = this.props.auth.user.likes;
         if (this.props.auth.isAuthenticated) {
@@ -44,23 +43,17 @@ class Pokemon extends Component {
 
   onHeartClick = () => {
     if (this.props.auth.isAuthenticated) {
-      console.log(this.props);
-      console.log(this.props.url);
       let pokemonData = {};
       let pokemonId = this.props.url.substring(34, this.props.url.length - 1);
       let id = this.props.auth.user.id;
       pokemonData.id = id;
       pokemonData.pokemonId = pokemonId;
-      // console.log(pokemonId);
       let likes = this.props.auth.user.likes;
       if (likes.includes(pokemonId)) {
-        // console.log("unlike");
         this.props.unLikePokemon(pokemonData);
         this.setState({ like: false });
       } else {
-        // console.log("like");
         this.props.likePokemon(pokemonData);
-        // console.log(111111);
         this.setState({ like: true });
       }
     } else {
@@ -111,7 +104,6 @@ class Pokemon extends Component {
     ) : (
       <span>Loading</span>
     );
-    console.log(pokemonImageSlider);
     return (
       <div>
         <div
