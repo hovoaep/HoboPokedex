@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import axios from "axios";
 import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
 import FilterPokemon from "./FilterPokemon";
 import { fetchPokemons } from "../helpers/helper";
-
+import { Link } from "react-router-dom";
 class DashboardPokemons extends Component {
   constructor() {
     super();
@@ -40,7 +39,6 @@ class DashboardPokemons extends Component {
   }
 
   handlePageChange = pageNumber => {
-    console.log(pageNumber);
     this.setState({ page: pageNumber }, () => {
       if (this.state.search) {
         let length = pageNumber * this.state.pageSize;
@@ -95,7 +93,9 @@ class DashboardPokemons extends Component {
   render() {
     const PokemonCardList = this.state.pokemonList.length ? (
       this.state.pokemonList.map((pokemon, i) => (
-        <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
+        <Link to={`/pokemon/${pokemon.name}`} className="underline">
+          <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
+        </Link>
       ))
     ) : (
       <div>

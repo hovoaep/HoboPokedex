@@ -110,11 +110,6 @@ class Pokemon extends Component {
           className="card mr-2 mb-2"
           style={{ width: "210px", display: "inline-block" }}
         >
-          {/* <img
-            className="card-img-top"
-            src={this.state.pokemonImage}
-            alt={this.state.name.toUpperCase()}
-          /> */}
           <Slider {...sliderSettings}>{pokemonImageSlider}</Slider>
         </div>
         <div className="card-body">
@@ -128,10 +123,10 @@ class Pokemon extends Component {
             </div>
           </div>
         </div>
-        <a onClick={this.onHeartClick}>
+        <button onClick={this.onHeartClick}>
           <span />
           {this.state.like ? "unLike" : "like"}
-        </a>
+        </button>
       </div>
     );
   }
