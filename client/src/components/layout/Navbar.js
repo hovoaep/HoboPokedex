@@ -1,15 +1,17 @@
+// eslint-disable-next-line
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import { Route, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 class Navbar extends Component {
   onLogoutClick(e) {
     e.preventDefault();
     this.props.logoutUser();
     console.log(this.props);
+    // eslint-disable-next-line
     <Redirect to="/" />;
   }
 
@@ -19,10 +21,16 @@ class Navbar extends Component {
     const authLinks = (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
+          <Link className="nav-link" to="/compare">
+            Compare
+          </Link>
+        </li>
+        <li className="nav-item">
           <Link className="nav-link" to="/profile">
             Profile
           </Link>
         </li>
+
         <li className="nav-item">
           <a
             href=""
@@ -90,4 +98,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { logoutUser })(Navbar);
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(Navbar);

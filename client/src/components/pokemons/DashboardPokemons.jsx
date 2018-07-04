@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
-import FilterPokemon from "./FilterPokemon";
 import { fetchPokemons } from "../helpers/helper";
 import { Link } from "react-router-dom";
 class DashboardPokemons extends Component {
@@ -24,12 +23,41 @@ class DashboardPokemons extends Component {
   componentWillMount() {
     let url = new URLSearchParams(this.props.location.search);
     let type = url.get("type");
-    console.log(type);
-    console.log(this.props.location);
     fetchPokemons(0, 0, "type", pokemonTypes =>
       this.setState({ pokemonTypes })
     );
-    if (type) {
+    // if (type) {
+    //   fetchPokemons(
+    //     this.state.page,
+    //     this.state.pageSize,
+    //     "search",
+    //     pokemonListAll =>
+    //       this.setState({
+    //         pokemonListAll,
+    //         totalPokemon: pokemonListAll.length,
+    //         pokemonList: pokemonListAll.slice(0, this.state.pageSize),
+    //         search: type
+    //       }),
+    //     "",
+    //     type
+    //   );
+    // } else {
+    // if (!type) {
+
+    // }
+    // }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    let url = new URLSearchParams(nextProps.location.search);
+    let type = url.get("type");
+    let reality = false;
+    if (typeof type === "string" && this.state.search !== type) {
+      reality = true;
+    } else {
+      reality = false;
+    }
+    if (reality) {
       fetchPokemons(
         this.state.page,
         this.state.pageSize,
@@ -53,32 +81,7 @@ class DashboardPokemons extends Component {
           this.setState({ pokemonList, totalPokemon })
       );
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextProps);
-    console.log("essss");
-
-    let url = new URLSearchParams(nextProps.location.search);
-    let type = url.get("type");
-    let reality = this.state.search !== type;
-    if (reality) {
-      fetchPokemons(
-        this.state.page,
-        this.state.pageSize,
-        "search",
-        pokemonListAll =>
-          this.setState({
-            pokemonListAll,
-            totalPokemon: pokemonListAll.length,
-            pokemonList: pokemonListAll.slice(0, this.state.pageSize),
-            search: type
-          }),
-        "",
-        type
-      );
-    }
-    return reality;
+    return true;
   }
 
   onChange(e) {
@@ -122,27 +125,13 @@ class DashboardPokemons extends Component {
 
   onSelectTypeChange = evt => {
     this.setState({ page: 1, search: evt.target.value });
-    fetchPokemons(
-      this.state.page,
-      this.state.pageSize,
-      "search",
-      pokemonListAll =>
-        this.setState({
-          pokemonListAll,
-          totalPokemon: pokemonListAll.length,
-          pokemonList: pokemonListAll.slice(0, this.state.pageSize)
-        }),
-      "",
-      evt.target.value
-    );
+    this.props.history.push(`dashboard?type=${evt.target.value}`);
   };
 
   render() {
     const PokemonCardList = this.state.pokemonList.length ? (
       this.state.pokemonList.map((pokemon, i) => (
-        <Link to={`/pokemon/${pokemon.name}`} className="underline">
-          <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
-        </Link>
+        <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
       ))
     ) : (
       <div>

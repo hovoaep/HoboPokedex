@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { likePokemon, unLikePokemon } from "../../actions/authActions";
-import PokemonStates from "./PokemonStates";
+import {
+  likePokemon,
+  unLikePokemon,
+  addComparePokemon
+} from "../../actions/authActions";
 import Slider from "react-slick";
 import Type from "./Type";
+import { Link } from "react-router-dom";
 
 class Pokemon extends Component {
   constructor(props) {
@@ -62,6 +66,10 @@ class Pokemon extends Component {
     }
   };
 
+  onCompareClick = () => {
+    this.props.addComparePokemon(this.props.auth.user.id, this.props.name);
+  };
+
   render() {
     const PokemonTypesTags = this.state.pokemonTypes.length ? (
       this.state.pokemonTypes.map((pokemonType, i) => (
@@ -105,29 +113,33 @@ class Pokemon extends Component {
     );
     return (
       <div>
-        <div
-          className="card mr-2 mb-2"
-          style={{ width: "210px", display: "inline-block" }}
-        >
-          <Slider {...sliderSettings}>{pokemonImageSlider}</Slider>
-        </div>
-        <div className="card-body">
-          <div className="d-flex align-items-center justify-content-center">
-            <div>
-              <h5 className="card-title">{this.state.name.toUpperCase()}</h5>
-              <div className="card-text">
-                <ul>
-                  {/* <PokemonStates states={this.state.pokemonStats} /> */}
-                  {PokemonTypesTags}
-                </ul>
+        <Link to={`/pokemon/${this.state.name}`} className="underline">
+          <div
+            className="card mr-2 mb-2"
+            style={{ width: "210px", display: "inline-block" }}
+          >
+            <Slider {...sliderSettings}>{pokemonImageSlider}</Slider>
+          </div>
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-center">
+              <div>
+                <h5 className="card-title">{this.state.name.toUpperCase()}</h5>
+                <div className="card-text">
+                  <ul>
+                    {/* <PokemonStates states={this.state.pokemonStats} /> */}
+                    {PokemonTypesTags}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </Link>
         <button onClick={this.onHeartClick}>
           <span />
           {this.state.like ? "unLike" : "like"}
         </button>
+
+        <span onClick={this.onCompareClick}>Compare </span>
       </div>
     );
   }
@@ -140,5 +152,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { likePokemon, unLikePokemon }
+  { likePokemon, unLikePokemon, addComparePokemon }
 )(Pokemon);

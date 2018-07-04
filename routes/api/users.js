@@ -48,7 +48,6 @@ router.post("/register", (req, res) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
           if (err) throw err;
           newUser.active = false;
-          console.log(newUser);
           newUser.activeToken = randomstring.generate();
           newUser.password = hash;
           newUser.save().then(user => {
@@ -103,7 +102,8 @@ router.post("/login", (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
-          likes: user.likes
+          likes: user.likes,
+          compare: user.compare
         };
         jwt.sign(
           payload,
@@ -124,14 +124,18 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get(
-  "/current",
+router.post(
+  "/xxx",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    console.log(req.user.id);
+    // res.json(req.user);
     res.json({
       id: req.user.id,
       name: req.user.name,
-      email: req.user.email
+      likes: req.user.likes,
+      compare: req.user.compare,
+      active: req.user.active
     });
   }
 );
@@ -170,7 +174,6 @@ router.delete(
     User.findById({ _id: userId })
       .then(user => {
         // Get remove index
-        console.log(user);
         const removeIndex = user.likes.indexOf(pokemonId);
 
         // Splice comment out of array
@@ -179,6 +182,45 @@ router.delete(
         user.save().then(user => res.json(user));
       })
       .catch(err => res.status(404).json({ postnotfound: "No post found" }));
+  }
+);
+
+router.post(
+  "/compare/:id/:pokemonId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { id, pokemonId } = req.params;
+    User.findById({ _id: id }).then(user => {
+      let checkValid = user.compare.filter(item => item === pokemonId);
+      // if (!checkValid.length) {
+      user.compare.push(pokemonId);
+      user.save().then(data => res.status(200).json(data.compare));
+      // } else {
+      // return res.status(400).json("You alredy added this pokemon");
+      // }
+    });
+  }
+);
+
+router.delete(
+  "/compare/:id/:pokemonId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { id, pokemonId } = req.params;
+    User.findById({ _id: id }).then(user => {
+      let checkValid = user.compare.filter(item => item === pokemonId);
+      let index = user.compare.indexOf(pokemonId);
+      if (checkValid.length) {
+        user.compare.splice(index, 1);
+        user.save().then(data => res.status(200).json(data.compare));
+      } else {
+        return res
+          .status(400)
+          .json(
+            "Sorry you don't have this pokemon in your compare and can't uncompare this"
+          );
+      }
+    });
   }
 );
 

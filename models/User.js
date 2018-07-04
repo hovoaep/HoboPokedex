@@ -23,6 +23,9 @@ const UserSchema = new Schema({
   likes: {
     type: Array
   },
+  compare: {
+    type: Array
+  },
   active: {
     type: Boolean
   },

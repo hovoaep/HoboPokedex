@@ -3,7 +3,8 @@ import isEmpty from "../validation/is-empty";
 import {
   SET_CURRENT_USER,
   LIKE_POKEMON,
-  UNLIKE_POKEMON
+  UNLIKE_POKEMON,
+  ADD_COMPARE_POKEMON
 } from "../actions/types";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_CURRENT_USER:
+      console.log(action);
       return {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
@@ -34,6 +36,12 @@ export default function(state = initialState, action) {
         ...state
         // likes
       };
+    case ADD_COMPARE_POKEMON:
+      let newStateCompare = { ...state };
+      newStateCompare.user.compare = action.payload;
+      console.log(newStateCompare);
+      console.log(newState);
+      return newStateCompare;
     default:
       return state;
   }

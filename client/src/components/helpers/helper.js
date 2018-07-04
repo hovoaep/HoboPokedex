@@ -43,7 +43,7 @@ export const fetchPokemons = function(
         case "type":
           let temp = [];
           res.data.results
-            .filter(item => item.name != "unknown")
+            .filter(item => item.name.toString() !== "unknown")
             .forEach(item => temp.push(item.name));
           cb(temp);
           break;

@@ -6,8 +6,8 @@ import {
   GET_ERRORS,
   SET_CURRENT_USER,
   CLEAR_CURRENT_PROFILE,
-  LIKE_POKEMON,
-  UNLIKE_POKEMON
+  UNLIKE_POKEMON,
+  ADD_COMPARE_POKEMON
 } from "./types";
 
 // Register UserSET_CU
@@ -47,10 +47,17 @@ export const loginUser = userData => dispatch => {
     );
 };
 
-export const setCurrentUser = decoded => {
+export function setCurrentUser(decoded) {
   return {
     type: SET_CURRENT_USER,
     payload: decoded
+  };
+}
+
+export const temp = data => {
+  return {
+    type: SET_CURRENT_USER,
+    payload: data
   };
 };
 
@@ -69,7 +76,6 @@ export const clearCurrentProfile = () => {
 
 export const likePokemon = data => dispatch => {
   const { id, pokemonId } = data;
-  console.log(data);
   axios
     .post(`/api/users/like/${id}/${pokemonId}`)
     .then(res => {
@@ -78,7 +84,6 @@ export const likePokemon = data => dispatch => {
       setAuthToken(token);
       const decoded = jwt_decode(token);
       dispatch(setCurrentUser(decoded));
-      console.log(res);
       // dispatch({
       //   type: LIKE_POKEMON,
       //   payload: res.data
@@ -97,10 +102,26 @@ export const unLikePokemon = data => dispatch => {
   axios
     .delete(`/api/users/like/${id}/${pokemonId}`)
     .then(res => {
-      console.log(res);
       dispatch({
         type: UNLIKE_POKEMON,
         payload: res.data.likes
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    );
+};
+
+export const addComparePokemon = (id, pokemonId) => dispatch => {
+  axios
+    .post(`/api/users/compare/${id}/${pokemonId}`)
+    .then(res => {
+      dispatch({
+        type: ADD_COMPARE_POKEMON,
+        payload: res.data
       });
     })
     .catch(err =>

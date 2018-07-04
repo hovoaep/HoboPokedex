@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import PokemonImageSlider from "../pokemons/PokemonImageSlider";
 import { fetchPokemons } from "../helpers/helper";
 import Spinner from "../common/Spinner";
@@ -18,7 +18,6 @@ class PokemonProfile extends Component {
     };
   }
   componentWillMount() {
-    console.log("Mountes");
     fetchPokemons(
       1,
       10,
@@ -27,7 +26,6 @@ class PokemonProfile extends Component {
         console.log(data);
         let type = [];
         data.types.forEach(item => type.push(item.type.name));
-        console.log(type, "type");
         let temp = {
           datasets: [
             {
@@ -46,8 +44,6 @@ class PokemonProfile extends Component {
           temp.datasets[0].data.push(item.base_stat);
           temp.labels.push(item.stat.name);
         });
-        console.log(data.stats);
-        console.log(temp);
         let images = Object.values(data.sprites)
           .filter(item => item !== null)
           .reverse();
@@ -76,7 +72,7 @@ class PokemonProfile extends Component {
     ) : (
       <span>Nothing</span>
     );
-    const type = this.state.type.map(item => <Type type={item} />);
+    const type = this.state.type.map(item => <Type key={item} type={item} />);
 
     return (
       <div>
@@ -84,10 +80,12 @@ class PokemonProfile extends Component {
           <div>
             <h1>{this.state.pokemonName.toUpperCase()}</h1>
             {type}
-            <div className="col-md-4">
-              {this.state.loading && (
-                <PokemonImageSlider images={this.state.images} />
-              )}
+            <div className="row">
+              <div className="col-md-4">
+                {this.state.loading && (
+                  <PokemonImageSlider images={this.state.images} />
+                )}
+              </div>
             </div>
             {elm}
           </div>

@@ -2,8 +2,6 @@ import React from "react";
 import Slider from "react-slick";
 
 export default props => {
-  console.log(111111111111);
-  console.log(props);
   const sliderSettings = {
     dots: false,
     infinite: true,
@@ -21,10 +19,9 @@ export default props => {
         className="card-img-top"
         data-test={item}
         src={item}
-        alt={"image"}
+        alt={""}
       />
     );
   });
-  console.log(pokemonImageSlider);
   return <Slider {...sliderSettings}>{pokemonImageSlider}</Slider>;
 };
