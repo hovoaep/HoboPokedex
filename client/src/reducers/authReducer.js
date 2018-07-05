@@ -4,7 +4,8 @@ import {
   SET_CURRENT_USER,
   LIKE_POKEMON,
   UNLIKE_POKEMON,
-  ADD_COMPARE_POKEMON
+  ADD_COMPARE_POKEMON,
+  DELETE_COMPARE_POKEMON
 } from "../actions/types";
 
 const initialState = {
@@ -41,6 +42,11 @@ export default function(state = initialState, action) {
       console.log(newStateCompare);
       console.log(newState);
       return newStateCompare;
+    case DELETE_COMPARE_POKEMON:
+      let deleteStateCompare = { ...state };
+      deleteStateCompare.user.compare = action.payload;
+      console.log(deleteStateCompare);
+      return deleteStateCompare;
     default:
       return state;
   }

@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import {
   likePokemon,
   unLikePokemon,
-  addComparePokemon
+  addComparePokemon,
+  deleteComparePokemon
 } from "../../actions/authActions";
 import Slider from "react-slick";
 import Type from "./Type";
@@ -15,6 +16,7 @@ class Pokemon extends Component {
     super(props);
     this.state = {
       like: false,
+      compare: false,
       pokemonImage: [],
       pokemonStats: [],
       pokemonTypes: [],
@@ -25,11 +27,17 @@ class Pokemon extends Component {
     axios
       .get(this.props.url)
       .then(res => {
+        let user = this.props.auth.user;
         let id = res.data.id.toString();
-        let likes = this.props.auth.user.likes;
+
+        let likes = user.likes;
+        let compare = user.compare;
         if (this.props.auth.isAuthenticated) {
           if (likes.includes(id)) {
             this.setState({ like: true });
+          }
+          if (compare.includes(this.props.name)) {
+            this.setState({ compare: true });
           }
         }
         this.setState({
@@ -67,7 +75,15 @@ class Pokemon extends Component {
   };
 
   onCompareClick = () => {
-    this.props.addComparePokemon(this.props.auth.user.id, this.props.name);
+    let user = this.props.auth.user;
+    let pokemonName = this.props.name;
+    if (user.compare.includes(pokemonName)) {
+      this.props.deleteComparePokemon(user.id, pokemonName);
+      this.setState({ compare: false });
+    } else {
+      this.props.addComparePokemon(user.id, pokemonName);
+      this.setState({ compare: true });
+    }
   };
 
   render() {
@@ -139,7 +155,9 @@ class Pokemon extends Component {
           {this.state.like ? "unLike" : "like"}
         </button>
 
-        <span onClick={this.onCompareClick}>Compare </span>
+        <span onClick={this.onCompareClick}>
+          {this.state.compare ? "unCompare" : "Compare"}{" "}
+        </span>
       </div>
     );
   }
@@ -152,5 +170,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { likePokemon, unLikePokemon, addComparePokemon }
+  { likePokemon, unLikePokemon, addComparePokemon, deleteComparePokemon }
 )(Pokemon);

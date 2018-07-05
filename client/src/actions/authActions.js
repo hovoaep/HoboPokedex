@@ -7,7 +7,8 @@ import {
   SET_CURRENT_USER,
   CLEAR_CURRENT_PROFILE,
   UNLIKE_POKEMON,
-  ADD_COMPARE_POKEMON
+  ADD_COMPARE_POKEMON,
+  DELETE_COMPARE_POKEMON
 } from "./types";
 
 // Register UserSET_CU
@@ -81,11 +82,11 @@ export const likePokemon = data => dispatch => {
   axios
     .post(`/api/users/like/${id}/${pokemonId}`)
     .then(res => {
-      const { token } = res.data;
-      localStorage.setItem("jwtToken", token);
-      setAuthToken(token);
-      const decoded = jwt_decode(token);
-      dispatch(setCurrentUser(decoded));
+      // const { token } = res.data;
+      // localStorage.setItem("jwtToken", token);
+      // setAuthToken(token);
+      // const decoded = jwt_decode(token);
+      // dispatch(setCurrentUser(decoded));
       // dispatch({
       //   type: LIKE_POKEMON,
       //   payload: res.data
@@ -123,6 +124,23 @@ export const addComparePokemon = (id, pokemonId) => dispatch => {
     .then(res => {
       dispatch({
         type: ADD_COMPARE_POKEMON,
+        payload: res.data
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    );
+};
+
+export const deleteComparePokemon = (id, pokemonId) => dispatch => {
+  axios
+    .delete(`/api/users/compare/${id}/${pokemonId}`)
+    .then(res => {
+      dispatch({
+        type: DELETE_COMPARE_POKEMON,
         payload: res.data
       });
     })

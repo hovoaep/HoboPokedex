@@ -26,12 +26,13 @@ import axios from "axios";
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
   const decoded = jwt_decode(localStorage.jwtToken);
+  console.log(decoded);
+  store.dispatch(setCurrentUser(decoded));
   axios
     .post("/api/users/xxx", decoded)
     .then(res => store.dispatch(temp(res.data)));
 
   const currentTime = Date.now() / 1000;
-  store.dispatch(setCurrentUser(decoded));
   if (decoded.exp < currentTime) {
     store.dispatch(logoutUser());
     window.location.href = "/login";

@@ -22,6 +22,7 @@ class Compare extends Component {
     };
   }
   componentWillMount() {
+    console.log(this.props);
     this.props.auth.user.compare.forEach(item => this.fetchPokemonStates(item));
     console.log(this.state);
   }
@@ -79,7 +80,7 @@ class Compare extends Component {
       this.props.auth.user.compare.length ===
       this.state.pokemonChartData.length ? (
         pokemonsNames.map((pokemon, i) => (
-          <div>
+          <div key={`${pokemon}${i}`}>
             <div className="row">
               <div className="col-4">
                 <Pokemon
