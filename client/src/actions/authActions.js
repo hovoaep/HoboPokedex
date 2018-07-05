@@ -48,6 +48,7 @@ export const loginUser = userData => dispatch => {
 };
 
 export function setCurrentUser(decoded) {
+  console.log("real");
   return {
     type: SET_CURRENT_USER,
     payload: decoded
@@ -55,6 +56,7 @@ export function setCurrentUser(decoded) {
 }
 
 export const temp = data => {
+  console.log("temp");
   return {
     type: SET_CURRENT_USER,
     payload: data

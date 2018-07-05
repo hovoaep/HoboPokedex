@@ -124,16 +124,16 @@ class Pokemon extends Component {
             <div className="d-flex align-items-center justify-content-center">
               <div>
                 <h5 className="card-title">{this.state.name.toUpperCase()}</h5>
-                <div className="card-text">
-                  <ul>
-                    {/* <PokemonStates states={this.state.pokemonStats} /> */}
-                    {PokemonTypesTags}
-                  </ul>
-                </div>
               </div>
             </div>
           </div>
         </Link>
+        <div className="card-text">
+          <ul>
+            {/* <PokemonStates states={this.state.pokemonStats} /> */}
+            {PokemonTypesTags}
+          </ul>
+        </div>
         <button onClick={this.onHeartClick}>
           <span />
           {this.state.like ? "unLike" : "like"}

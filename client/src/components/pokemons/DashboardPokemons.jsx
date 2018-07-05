@@ -3,7 +3,6 @@ import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
 import { fetchPokemons } from "../helpers/helper";
-import { Link } from "react-router-dom";
 class DashboardPokemons extends Component {
   constructor() {
     super();
@@ -21,8 +20,6 @@ class DashboardPokemons extends Component {
     this.onChange = this.onChange.bind(this);
   }
   componentWillMount() {
-    let url = new URLSearchParams(this.props.location.search);
-    let type = url.get("type");
     fetchPokemons(0, 0, "type", pokemonTypes =>
       this.setState({ pokemonTypes })
     );
