@@ -8,7 +8,10 @@ import {
   CLEAR_CURRENT_PROFILE,
   UNLIKE_POKEMON,
   ADD_COMPARE_POKEMON,
-  DELETE_COMPARE_POKEMON
+  DELETE_COMPARE_POKEMON,
+  GET_PROFILE,
+  PROFILE_LOADING,
+  TEST
 } from "./types";
 
 // Register UserSET_CU
@@ -150,4 +153,28 @@ export const deleteComparePokemon = (id, pokemonId) => dispatch => {
         payload: err
       })
     );
+};
+
+export const getCurrentProfile = () => dispatch => {
+  dispatch(setProfileLoading());
+  axios
+    .get("/api/profile")
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: {}
+      })
+    );
+};
+
+export const setProfileLoading = () => {
+  return {
+    type: PROFILE_LOADING
+  };
 };

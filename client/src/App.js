@@ -21,6 +21,7 @@ import DashboardPokemons from "./components/pokemons/DashboardPokemons";
 import Profile from "./components/profile/Profile";
 import PokemonProfile from "./components/pokemonProfile/PokemonProfile";
 import Compare from "./components/compare/Compare";
+import Test from "./components/Test";
 import axios from "axios";
 
 if (localStorage.jwtToken) {
@@ -28,9 +29,9 @@ if (localStorage.jwtToken) {
   const decoded = jwt_decode(localStorage.jwtToken);
   console.log(decoded);
   store.dispatch(setCurrentUser(decoded));
-  axios
-    .post("/api/users/xxx", decoded)
-    .then(res => store.dispatch(temp(res.data)));
+  // axios
+  //   .post("/api/users/xxx", decoded)
+  //   .then(res => store.dispatch(temp(res.data)));
 
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -59,6 +60,7 @@ class App extends Component {
               <Switch>
                 <PrivateRoute exact path="/profile" component={Profile} />
                 <PrivateRoute exact path="/compare" component={Compare} />
+                <PrivateRoute exact path="/test" component={Test} />
               </Switch>
             </div>
             <Footer />
