@@ -3,8 +3,6 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
-// Load Validation
-
 // Load Profile Model
 const Profile = require("../../models/Profile");
 // Load User Model
@@ -15,7 +13,6 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const errors = {};
-
     Profile.findOne({ user: req.user.id })
       .populate("user", ["name"])
       .then(profile => {
@@ -30,44 +27,30 @@ router.get(
 );
 
 router.post(
-  "/like/:id/:pokemonId",
+  "/like/:pokemonId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const userId = req.params.id;
     const pokemonId = req.params.pokemonId;
-    Profile.findById({ _id: userId }).then(user => {
+    console.log(pokemonId);
+
+    Profile.findOne({ user: req.user.id }).then(user => {
       user.likes.push(pokemonId);
-      user.save();
-      const payload = {
-        id: user.id,
-        name: user.name,
-        likes: user.likes
-      };
-      jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
-        res.json({
-          // success: true,
-          token: "Bearer " + token
-        });
-      });
-      // res.json(user.likes);
+      user.save().then(data => res.json(data));
     });
   }
 );
 
 router.delete(
-  "/like/:id/:pokemonId",
+  "/like/:pokemonId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const userId = req.params.id;
     const pokemonId = req.params.pokemonId;
-    Profile.findById({ _id: userId })
+    console.log(pokemonId);
+
+    Profile.findOne({ user: req.user.id })
       .then(user => {
-        // Get remove index
         const removeIndex = user.likes.indexOf(pokemonId);
-
-        // Splice comment out of array
         user.likes.splice(removeIndex, 1);
-
         user.save().then(user => res.json(user));
       })
       .catch(err => res.status(404).json({ postnotfound: "No post found" }));
@@ -78,46 +61,29 @@ router.post(
   "/compare/:pokemonId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { pokemonId } = req.params;
+    const pokemonId = req.params.pokemonId;
+    console.log(pokemonId);
+    console.log(req.user);
     Profile.findOne({ user: req.user.id })
-      .populate("user", ["name"])
-      .then(data => {
-        if (!data) {
-          new Profile({ user: req.user.id, compare: pokemonId })
-            .save()
-            .then(profile => res.json(profile));
-        } else {
-          let compareData = data.compare;
-          compareData.push(pokemonId);
-          Profile.findOneAndUpdate(
-            { user: req.user.id },
-            { compare: compareData },
-            { new: true }
-          ).then(profile => res.json(profile));
-        }
+      .then(user => {
+        user.compare.push(pokemonId);
+        user.save().then(user => res.json(user));
       })
       .catch(err => console.log(err));
   }
 );
 
 router.delete(
-  "/compare/:id/:pokemonId",
+  "/compare/:pokemonId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { id, pokemonId } = req.params;
-    Profile.findById({ _id: id }).then(user => {
-      let checkValid = user.compare.filter(item => item === pokemonId);
-      let index = user.compare.indexOf(pokemonId);
-      if (checkValid.length) {
-        user.compare.splice(index, 1);
-        user.save().then(data => res.status(200).json(data.compare));
-      } else {
-        return res
-          .status(400)
-          .json(
-            "Sorry you don't have this pokemon in your compare and can't uncompare this"
-          );
-      }
+    const pokemonId = req.params.pokemonId;
+    console.log(pokemonId);
+
+    Profile.findOne({ user: req.user.id }).then(user => {
+      const removeIndex = user.compare.indexOf(pokemonId);
+      user.compare.splice(removeIndex, 1);
+      user.save().then(user => res.json(user));
     });
   }
 );

@@ -6,7 +6,7 @@ import {
   unLikePokemon,
   addComparePokemon,
   deleteComparePokemon
-} from "../../actions/authActions";
+} from "../../actions/userDataActions";
 import Slider from "react-slick";
 import Type from "./Type";
 import { Link } from "react-router-dom";
@@ -24,22 +24,10 @@ class Pokemon extends Component {
     };
   }
   componentDidMount() {
+    console.log(33333333);
     axios
       .get(this.props.url)
       .then(res => {
-        let user = this.props.auth.user;
-        let id = res.data.id.toString();
-
-        let likes = user.likes;
-        let compare = user.compare;
-        if (this.props.auth.isAuthenticated) {
-          if (likes.includes(id)) {
-            this.setState({ like: true });
-          }
-          if (compare.includes(this.props.name)) {
-            this.setState({ compare: true });
-          }
-        }
         this.setState({
           pokemonImage: Object.values(res.data.sprites)
             .filter(item => item !== null)
@@ -56,17 +44,14 @@ class Pokemon extends Component {
 
   onHeartClick = () => {
     if (this.props.auth.isAuthenticated) {
-      let pokemonData = {};
-      let pokemonId = this.props.url.substring(34, this.props.url.length - 1);
-      let id = this.props.auth.user.id;
-      pokemonData.id = id;
-      pokemonData.pokemonId = pokemonId;
-      let likes = this.props.auth.user.likes;
-      if (likes.includes(pokemonId)) {
-        this.props.unLikePokemon(pokemonData);
+      let userData = this.props.profile.userData;
+      console.log(userData);
+      if (userData.likes.includes(this.state.name)) {
+        this.props.unLikePokemon(this.state.name);
         this.setState({ like: false });
       } else {
-        this.props.likePokemon(pokemonData);
+        console.log(2222);
+        this.props.likePokemon(this.state.name);
         this.setState({ like: true });
       }
     } else {
@@ -75,14 +60,17 @@ class Pokemon extends Component {
   };
 
   onCompareClick = () => {
-    let user = this.props.auth.user;
-    let pokemonName = this.props.name;
-    if (user.compare.includes(pokemonName)) {
-      this.props.deleteComparePokemon(user.id, pokemonName);
-      this.setState({ compare: false });
+    if (this.props.auth.isAuthenticated) {
+      let userData = this.props.profile.userData;
+      if (userData.compare.includes(this.state.name)) {
+        this.props.deleteComparePokemon(this.state.name);
+        this.setState({ compare: false });
+      } else {
+        this.props.addComparePokemon(this.state.name);
+        this.setState({ compare: true });
+      }
     } else {
-      this.props.addComparePokemon(user.id, pokemonName);
-      this.setState({ compare: true });
+      alert("You need authenticated");
     }
   };
 

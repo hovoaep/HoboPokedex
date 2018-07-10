@@ -3,6 +3,7 @@ import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
 import { fetchPokemons } from "../helpers/helper";
+
 class DashboardPokemons extends Component {
   constructor() {
     super();
@@ -23,26 +24,13 @@ class DashboardPokemons extends Component {
     fetchPokemons(0, 0, "type", pokemonTypes =>
       this.setState({ pokemonTypes })
     );
-    // if (type) {
-    //   fetchPokemons(
-    //     this.state.page,
-    //     this.state.pageSize,
-    //     "search",
-    //     pokemonListAll =>
-    //       this.setState({
-    //         pokemonListAll,
-    //         totalPokemon: pokemonListAll.length,
-    //         pokemonList: pokemonListAll.slice(0, this.state.pageSize),
-    //         search: type
-    //       }),
-    //     "",
-    //     type
-    //   );
-    // } else {
-    // if (!type) {
-
-    // }
-    // }
+    fetchPokemons(
+      this.state.page,
+      this.state.pageSize,
+      "",
+      (pokemonList, totalPokemon) =>
+        this.setState({ pokemonList, totalPokemon })
+    );
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -68,14 +56,6 @@ class DashboardPokemons extends Component {
           }),
         "",
         type
-      );
-    } else {
-      fetchPokemons(
-        this.state.page,
-        this.state.pageSize,
-        "",
-        (pokemonList, totalPokemon) =>
-          this.setState({ pokemonList, totalPokemon })
       );
     }
     return true;

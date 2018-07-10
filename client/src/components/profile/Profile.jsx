@@ -9,17 +9,18 @@ import { setCurrentUser } from "../../actions/authActions";
 
 class Profile extends Component {
   render() {
-    console.log("render8");
-    const pokemons = this.props.auth.user.likes.map(item => {
-      return `https://pokeapi.co/api/v2/pokemon/${Number(item)}`;
-    });
-    console.log(pokemons.length);
-    var PokemonCardList = pokemons.length ? (
-      pokemons.map((pokemon, i) => <Pokemon key={i} url={pokemon} />)
-    ) : (
+    console.log(PokemonCardList);
+    console.log(this.props.profile);
+    const PokemonCardList = this.props.profile.loading ? (
       <div>
         <Spinner />
       </div>
+    ) : (
+      this.props.profile.userData.likes.map((item, i) => {
+        return (
+          <Pokemon key={i} url={`https://pokeapi.co/api/v2/pokemon/${item}`} />
+        );
+      })
     );
     console.log(PokemonCardList);
     const { user } = this.props.auth;
@@ -45,7 +46,8 @@ Profile.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile
 });
 
 const mapDispatchToProps = dispatch =>
@@ -56,4 +58,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Profile);

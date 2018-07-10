@@ -20,12 +20,6 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  likes: {
-    type: Array
-  },
-  compare: {
-    type: Array
-  },
   active: {
     type: Boolean
   },

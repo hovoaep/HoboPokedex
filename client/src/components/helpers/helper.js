@@ -15,6 +15,7 @@ export const fetchPokemons = function(
       api = `${api}/type/${search}`;
       break;
     case "pokemon":
+      console.log(555555555);
       api = `${api}/pokemon/${id}`;
       break;
     case "type":
@@ -28,6 +29,7 @@ export const fetchPokemons = function(
     .then(res => {
       switch (type) {
         case "search":
+          console.log(1);
           let newPokemons = [];
           for (let i = 0; i < res.data.pokemon.length; i++) {
             let temp = {};
@@ -38,9 +40,11 @@ export const fetchPokemons = function(
           cb(newPokemons);
           break;
         case "pokemon":
+          console.log(2);
           cb(res.data);
           break;
         case "type":
+          console.log(3);
           let temp = [];
           res.data.results
             .filter(item => item.name.toString() !== "unknown")
@@ -48,6 +52,7 @@ export const fetchPokemons = function(
           cb(temp);
           break;
         default:
+          console.log(4);
           cb(res.data.results, res.data.count);
           break;
       }

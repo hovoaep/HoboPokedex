@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { getCurrentProfile } from "../actions/authActions";
+import { getCurrentProfile } from "../actions/userDataActions";
 
 import axios from "axios";
 

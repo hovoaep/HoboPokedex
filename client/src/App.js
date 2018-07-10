@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser, temp } from "./actions/authActions";
+import { getCurrentProfile } from "./actions/userDataActions";
 import PrivateRoute from "./components/common/PrivateRoute";
 
 import { Provider } from "react-redux";
@@ -22,17 +23,13 @@ import Profile from "./components/profile/Profile";
 import PokemonProfile from "./components/pokemonProfile/PokemonProfile";
 import Compare from "./components/compare/Compare";
 import Test from "./components/Test";
-import axios from "axios";
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
   const decoded = jwt_decode(localStorage.jwtToken);
   console.log(decoded);
   store.dispatch(setCurrentUser(decoded));
-  // axios
-  //   .post("/api/users/xxx", decoded)
-  //   .then(res => store.dispatch(temp(res.data)));
-
+  store.dispatch(getCurrentProfile());
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
     store.dispatch(logoutUser());

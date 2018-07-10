@@ -5,7 +5,7 @@ import { Bar } from "react-chartjs-2";
 import randomColor from "randomcolor";
 import Spinner from "../common/Spinner";
 
-import { addComparePokemon } from "../../actions/authActions";
+import { addComparePokemon } from "../../actions/userDataActions";
 import Pokemon from "../pokemons/Pokemon";
 import PokemonChartHorzinal from "../pokemons/PokemonChartHorzinal";
 class Compare extends Component {
@@ -21,12 +21,15 @@ class Compare extends Component {
       evolutionChain: []
     };
   }
-  componentWillMount() {
-    console.log(this.props);
-    this.props.auth.user.compare.forEach(item => this.fetchPokemonStates(item));
-    console.log(this.state);
+  componentWillReceiveProps(nextProps) {
+    !this.props.profile.loading
+      ? null
+      : nextProps.profile.userData.compare.forEach(item =>
+          this.fetchPokemonStates(item)
+        );
   }
   fetchPokemonStates = pokemon => {
+    console.log(pokemon);
     fetchPokemons(
       0,
       0,
@@ -73,13 +76,31 @@ class Compare extends Component {
     );
   };
   render() {
-    const api = "https://pokeapi.co/api/v2/pokemon";
-    const pokemonsNames = this.props.auth.user.compare;
-    console.log(pokemonsNames);
-    const PokemonCardList =
-      this.props.auth.user.compare.length ===
-      this.state.pokemonChartData.length ? (
-        pokemonsNames.map((pokemon, i) => (
+    // console.log(this.props);
+    var PokemonCardList = null;
+    var BarChar = null;
+    if (
+      !this.props.profile.loading &&
+      this.state.pokemonChartData.length ==
+        this.props.profile.userData.compare.length
+    ) {
+      console.log(77);
+      const obj = {
+        datasets: this.state.pokemonChartData,
+        labels: this.state.pokemonChartLabel
+      };
+      BarChar =
+        this.props.profile.userData.compare.length ===
+        this.state.pokemonChartData.length ? (
+          <Bar data={obj} width={100} height={50} />
+        ) : (
+          <div>
+            <Spinner />
+          </div>
+        );
+      const api = "https://pokeapi.co/api/v2/pokemon";
+      PokemonCardList = !this.props.profile.loading ? (
+        this.props.profile.userData.compare.map((pokemon, i) => (
           <div key={`${pokemon}${i}`}>
             <div className="row">
               <div className="col-4">
@@ -105,45 +126,15 @@ class Compare extends Component {
           <Spinner />
         </div>
       );
-
-    const obj = {
-      datasets: this.state.pokemonChartData,
-      labels: this.state.pokemonChartLabel
-    };
-    console.log(obj);
-    console.log(
-      this.props.auth.user.compare.length,
-      this.state.pokemonChartData.length
-    );
-    const BarChar =
-      this.props.auth.user.compare.length ===
-      this.state.pokemonChartData.length ? (
-        <Bar data={obj} width={100} height={50} />
-      ) : (
-        <div>
-          <Spinner />
-        </div>
-      );
-    const options = {
-      // maintainAspectRatio: false,
-      scales: {
-        xAxes: [
-          {
-            stacked: true
-          }
-        ],
-        yAxes: [
-          {
-            stacked: true
-          }
-        ]
-      }
-    };
-
+    }
+    console.log(this.props.profile.loading ? null : this.props.profile);
     return (
       <div>
-        {BarChar}
-        <div className="container mt-5">{PokemonCardList}</div>
+        {!this.props.profile.loading && BarChar}
+        <h1>test</h1>
+        <div className="container mt-5">
+          {!this.props.profile.loading && PokemonCardList}
+        </div>
       </div>
     );
   }
