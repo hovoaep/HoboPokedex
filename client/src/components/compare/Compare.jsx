@@ -76,7 +76,6 @@ class Compare extends Component {
     );
   };
   render() {
-    // console.log(this.props);
     var PokemonCardList = null;
     var BarChar = null;
     if (
@@ -84,7 +83,6 @@ class Compare extends Component {
       this.state.pokemonChartData.length ==
         this.props.profile.userData.compare.length
     ) {
-      console.log(77);
       const obj = {
         datasets: this.state.pokemonChartData,
         labels: this.state.pokemonChartLabel
@@ -130,8 +128,7 @@ class Compare extends Component {
     console.log(this.props.profile.loading ? null : this.props.profile);
     return (
       <div>
-        {!this.props.profile.loading && BarChar}
-        <h1>test</h1>
+        {BarChar !== null ? BarChar : <Spinner />}
         <div className="container mt-5">
           {!this.props.profile.loading && PokemonCardList}
         </div>

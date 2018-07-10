@@ -28,6 +28,13 @@ class Pokemon extends Component {
     axios
       .get(this.props.url)
       .then(res => {
+        console.log(this.props.profile.userData.likes.includes(res.data.name));
+        this.props.profile.userData.likes.includes(res.data.name)
+          ? this.setState({ like: true })
+          : null;
+        this.props.profile.userData.compare.includes(res.data.name)
+          ? this.setState({ compare: true })
+          : null;
         this.setState({
           pokemonImage: Object.values(res.data.sprites)
             .filter(item => item !== null)
