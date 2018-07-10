@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Icon } from "antd";
+import { Button } from "antd";
 
 import { getCurrentProfile } from "../actions/userDataActions";
 
@@ -13,6 +15,9 @@ class Test extends Component {
     return (
       <div>
         <h1>Testtttttttt</h1>
+        <Button type="primary">Primary</Button>
+
+        <Icon type="heart-o" />
       </div>
     );
   }

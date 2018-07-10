@@ -62,8 +62,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const pokemonId = req.params.pokemonId;
-    console.log(pokemonId);
-    console.log(req.user);
     Profile.findOne({ user: req.user.id })
       .then(user => {
         user.compare.push(pokemonId);
@@ -78,8 +76,6 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const pokemonId = req.params.pokemonId;
-    console.log(pokemonId);
-
     Profile.findOne({ user: req.user.id }).then(user => {
       const removeIndex = user.compare.indexOf(pokemonId);
       user.compare.splice(removeIndex, 1);

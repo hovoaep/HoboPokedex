@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Card, Icon, notification } from "antd";
 import { connect } from "react-redux";
 import {
   likePokemon,
@@ -9,7 +10,9 @@ import {
 } from "../../actions/userDataActions";
 import Slider from "react-slick";
 import Type from "./Type";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { openNotificationWithIcon } from "../helpers/helper";
+const { Meta } = Card;
 
 class Pokemon extends Component {
   constructor(props) {
@@ -24,11 +27,9 @@ class Pokemon extends Component {
     };
   }
   componentDidMount() {
-    console.log(33333333);
     axios
       .get(this.props.url)
       .then(res => {
-        console.log(this.props.profile.userData.likes.includes(res.data.name));
         this.props.profile.userData.likes.includes(res.data.name)
           ? this.setState({ like: true })
           : null;
@@ -52,12 +53,20 @@ class Pokemon extends Component {
   onHeartClick = () => {
     if (this.props.auth.isAuthenticated) {
       let userData = this.props.profile.userData;
-      console.log(userData);
       if (userData.likes.includes(this.state.name)) {
         this.props.unLikePokemon(this.state.name);
         this.setState({ like: false });
+        openNotificationWithIcon(
+          "info",
+          "You dislike this pokeomn",
+          "For seen your pokemon go to profile page"
+        );
       } else {
-        console.log(2222);
+        openNotificationWithIcon(
+          "success",
+          "Congratulations you like this pokemon",
+          "For seen your pokemon go to profile page"
+        );
         this.props.likePokemon(this.state.name);
         this.setState({ like: true });
       }
@@ -72,9 +81,19 @@ class Pokemon extends Component {
       if (userData.compare.includes(this.state.name)) {
         this.props.deleteComparePokemon(this.state.name);
         this.setState({ compare: false });
+        openNotificationWithIcon(
+          "info",
+          "You uncompare this pokeomn",
+          "For seen your pokemon go to compare page"
+        );
       } else {
         this.props.addComparePokemon(this.state.name);
         this.setState({ compare: true });
+        openNotificationWithIcon(
+          "success",
+          "Congratulations you add compare this pokemon",
+          "For seen all your pokemon go to compare page"
+        );
       }
     } else {
       alert("You need authenticated");
@@ -82,22 +101,10 @@ class Pokemon extends Component {
   };
 
   render() {
-    const PokemonTypesTags = this.state.pokemonTypes.length ? (
-      this.state.pokemonTypes.map((pokemonType, i) => (
-        <Type type={pokemonType.type.name} key={i} />
-      ))
-    ) : (
-      <div
-        className="card mr-2 mb-2"
-        style={{ width: "210px", display: "inline-block" }}
-      >
-        <img
-          src="https://media.giphy.com/media/sM503VtpDzxLy/giphy.gif"
-          alt="Loading"
-          className="card-img-top"
-        />
-      </div>
-    );
+    const PokemonTypesTags = this.state.pokemonTypes.map((pokemonType, i) => (
+      <Type type={pokemonType.type.name} key={i} />
+    ));
+
     const sliderSettings = {
       dots: false,
       infinite: true,
@@ -107,52 +114,47 @@ class Pokemon extends Component {
       autoplay: true,
       autoplaySpeed: 3000
     };
-    const pokemonImageSlider = this.state.pokemonImage.length ? (
-      this.state.pokemonImage.map((item, key) => {
-        return (
-          <img
-            key={key}
-            className="card-img-top"
-            data-test={item}
-            src={item}
-            alt={this.state.name.toUpperCase()}
-          />
-        );
-      })
-    ) : (
-      <span>Loading</span>
-    );
+    const pokemonImageSlider = this.state.pokemonImage.map((item, key) => {
+      return (
+        <img
+          key={key}
+          className="card-img-top"
+          data-test={item}
+          src={item}
+          alt={this.state.name.toUpperCase()}
+        />
+      );
+    });
+    const gridStyle = {
+      width: "25%",
+      textAlign: "center"
+    };
     return (
       <div>
-        <Link to={`/pokemon/${this.state.name}`} className="underline">
-          <div
-            className="card mr-2 mb-2"
-            style={{ width: "210px", display: "inline-block" }}
-          >
-            <Slider {...sliderSettings}>{pokemonImageSlider}</Slider>
-          </div>
-          <div className="card-body">
-            <div className="d-flex align-items-center justify-content-center">
-              <div>
-                <h5 className="card-title">{this.state.name.toUpperCase()}</h5>
-              </div>
-            </div>
-          </div>
-        </Link>
-        <div className="card-text">
-          <ul>
-            {/* <PokemonStates states={this.state.pokemonStats} /> */}
-            {PokemonTypesTags}
-          </ul>
-        </div>
-        <button onClick={this.onHeartClick}>
-          <span />
-          {this.state.like ? "unLike" : "like"}
-        </button>
-
-        <span onClick={this.onCompareClick}>
-          {this.state.compare ? "unCompare" : "Compare"}{" "}
-        </span>
+        <Card
+          style={gridStyle}
+          className="ant-card-grid"
+          cover={<Slider {...sliderSettings}>{pokemonImageSlider}</Slider>}
+          actions={[
+            <Icon
+              type={this.state.like ? "heart" : "heart-o"}
+              onClick={this.onHeartClick}
+              style={{ fontSize: "25px" }}
+            />,
+            <Icon
+              type={this.state.compare ? "area-chart" : "line-chart"}
+              onClick={this.onCompareClick}
+              style={{ fontSize: "25px" }}
+            />
+          ]}
+        >
+          <Meta
+            title={
+              <a href={`/pokemon/${this.state.name}`}> {this.state.name} </a>
+            }
+            description={PokemonTypesTags}
+          />
+        </Card>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 import "./App.css";
+import "antd/dist/antd.css";
 
 // Components
 
@@ -27,7 +28,6 @@ import Test from "./components/Test";
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
   const decoded = jwt_decode(localStorage.jwtToken);
-  console.log(decoded);
   store.dispatch(setCurrentUser(decoded));
   store.dispatch(getCurrentProfile());
   const currentTime = Date.now() / 1000;
@@ -38,10 +38,6 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
-  constructor() {
-    super();
-    console.log(1111);
-  }
   render() {
     return (
       <Provider store={store}>

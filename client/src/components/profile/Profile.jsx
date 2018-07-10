@@ -6,11 +6,10 @@ import Spinner from "../common/Spinner";
 import { bindActionCreators } from "redux";
 import { setCurrentUser } from "../../actions/authActions";
 // import { Link } from "react-router-dom";
+import { Card } from "antd";
 
 class Profile extends Component {
   render() {
-    console.log(PokemonCardList);
-    console.log(this.props.profile);
     const PokemonCardList = this.props.profile.loading ? (
       <div>
         <Spinner />
@@ -22,10 +21,8 @@ class Profile extends Component {
         );
       })
     );
-    console.log(PokemonCardList);
     const { user } = this.props.auth;
     // let profileContent;
-    console.log(this.props);
 
     return (
       <div>
@@ -34,7 +31,7 @@ class Profile extends Component {
         </div>
         <div>
           <h3>This is your likes</h3>
-          <div className="pokemonList">{PokemonCardList}</div>
+          <Card>{PokemonCardList}</Card>
         </div>
       </div>
     );

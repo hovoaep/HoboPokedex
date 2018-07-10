@@ -34,7 +34,7 @@ export const likePokemon = pokemonId => dispatch => {
       console.log(res);
       dispatch({
         type: TYPES.LIKE_POKEMON,
-        payload: res.data.likes
+        payload: res.data
       });
     })
     .catch(err => {
@@ -54,7 +54,7 @@ export const unLikePokemon = data => dispatch => {
     .then(res => {
       dispatch({
         type: TYPES.UNLIKE_POKEMON,
-        payload: res.data.likes
+        payload: res.data
       });
     })
     .catch(err =>

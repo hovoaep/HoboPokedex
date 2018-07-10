@@ -21,6 +21,15 @@ class Compare extends Component {
       evolutionChain: []
     };
   }
+
+  componentWillMount() {
+    this.props.profile.userData
+      ? this.props.profile.userData.compare.forEach(item =>
+          this.fetchPokemonStates(item)
+        )
+      : null;
+  }
+
   componentWillReceiveProps(nextProps) {
     !this.props.profile.loading
       ? null

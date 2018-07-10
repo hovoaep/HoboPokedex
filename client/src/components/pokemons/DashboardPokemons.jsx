@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import Pagination from "react-js-pagination";
+// import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
 import { fetchPokemons } from "../helpers/helper";
+import { Card, Select, Pagination } from "antd";
+const Option = Select.Option;
 
 class DashboardPokemons extends Component {
   constructor() {
@@ -21,9 +23,18 @@ class DashboardPokemons extends Component {
     this.onChange = this.onChange.bind(this);
   }
   componentWillMount() {
-    fetchPokemons(0, 0, "type", pokemonTypes =>
-      this.setState({ pokemonTypes })
-    );
+    fetchPokemons(0, 0, "type", pokemonTypes => {
+      let temp = [];
+      pokemonTypes.forEach(type => {
+        let elm = (
+          <Option key={type} value={type}>
+            {type}
+          </Option>
+        );
+        temp.push(elm);
+      });
+      this.setState({ pokemonTypes: temp });
+    });
     fetchPokemons(
       this.state.page,
       this.state.pageSize,
@@ -100,9 +111,19 @@ class DashboardPokemons extends Component {
     });
   };
 
-  onSelectTypeChange = evt => {
-    this.setState({ page: 1, search: evt.target.value });
-    this.props.history.push(`dashboard?type=${evt.target.value}`);
+  onSelectTypeChange = value => {
+    console.log(value);
+    this.setState({ page: 1, search: value });
+    this.props.history.push(`dashboard?type=${value}`);
+  };
+
+  onShowSizeChange = (current, pageSize) => {
+    console.log(current, pageSize);
+  };
+
+  onPageChange = (page, pageSize) => {
+    console.log(11);
+    console.log(page, pageSize);
   };
 
   render() {
@@ -116,49 +137,28 @@ class DashboardPokemons extends Component {
       </div>
     );
 
-    const pokemonTypes = this.state.pokemonTypes.length ? (
-      this.state.pokemonTypes.map(item => (
-        <option key={item} val={item}>
-          {item}
-        </option>
-      ))
-    ) : (
-      <option>Loading...</option>
-    );
     return (
       <div>
-        <select
-          onChange={this.onSelectTypeChange}
-          className="form-control mb-2"
+        <Select
+          showSearch
           style={{ width: "100%" }}
+          onChange={this.onSelectTypeChange}
+          placeholder="Select a type"
         >
-          {pokemonTypes}
-        </select>
-        <div className="pokemonList">{PokemonCardList}</div>
+          {this.state.pokemonTypes}
+        </Select>
+        <Card>{PokemonCardList}</Card>
         <div
           style={{ display: "flex", justifyContent: "center" }}
           className="mt-4 form-group"
         >
           <Pagination
-            activePage={this.state.page}
-            itemsCountPerPage={this.state.pageSize - 1}
-            totalItemsCount={this.state.totalPokemon}
-            pageRangeDisplayed={5}
-            onChange={this.handlePageChange}
-            itemClass={"page-item"}
-            linkClass={"page-link"}
-          />
-          <select
-            onChange={this.onSelectChange}
-            className="form-control"
-            style={{ width: "auto" }}
-          >
-            <option value="10">10 / PAGE</option>
-            <option value="20">20 / PAGE</option>
-            <option value="30">30 / PAGE</option>
-            <option value="40">40 / PAGE</option>
-            <option value="50">50 / PAGE</option>
-          </select>
+            showSizeChanger
+            onShowSizeChange={this.onShowSizeChange}
+            onChange={this.onPageChange}
+            defaultCurrent={1}
+            total={this.state.totalPokemon ? this.state.totalPokemon : 50}
+          />,
         </div>
       </div>
     );

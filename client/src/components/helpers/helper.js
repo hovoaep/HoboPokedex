@@ -1,4 +1,5 @@
 import axios from "axios";
+import { notification } from "antd";
 
 export const fetchPokemons = function(
   page = 0,
@@ -101,4 +102,11 @@ export const getTypeColor = typeName => {
     default:
       return "#d0cece";
   }
+};
+
+export const openNotificationWithIcon = (type, title, text) => {
+  notification[type]({
+    message: title,
+    description: text
+  });
 };
