@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, Icon, notification } from "antd";
+import { Card, Icon } from "antd";
 import { connect } from "react-redux";
 import {
   likePokemon,
@@ -10,7 +10,6 @@ import {
 } from "../../actions/userDataActions";
 import Slider from "react-slick";
 import Type from "./Type";
-import { withRouter } from "react-router-dom";
 import { openNotificationWithIcon } from "../helpers/helper";
 const { Meta } = Card;
 

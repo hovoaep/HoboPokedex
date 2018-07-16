@@ -1,12 +1,6 @@
 import isEmpty from "../validation/is-empty";
 
-import {
-  SET_CURRENT_USER,
-  LIKE_POKEMON,
-  UNLIKE_POKEMON,
-  ADD_COMPARE_POKEMON,
-  DELETE_COMPARE_POKEMON
-} from "../actions/types";
+import { SET_CURRENT_USER } from "../actions/types";
 
 const initialState = {
   isAuthenticated: false,

@@ -76,8 +76,8 @@ class DashboardPokemons extends Component {
     this.setState({ [e.target.name]: e.target.value.toLowerCase() });
   }
 
-  handlePageChange = pageNumber => {
-    this.setState({ page: pageNumber }, () => {
+  handlePageChange = (pageNumber, pageSize) => {
+    this.setState({ page: pageNumber, pageSize: pageSize }, () => {
       if (this.state.search) {
         let length = pageNumber * this.state.pageSize;
         let newPokemons = this.state.pokemonListAll.slice(length, length + 10);
@@ -155,7 +155,7 @@ class DashboardPokemons extends Component {
           <Pagination
             showSizeChanger
             onShowSizeChange={this.onShowSizeChange}
-            onChange={this.onPageChange}
+            onChange={this.handlePageChange}
             defaultCurrent={1}
             total={this.state.totalPokemon ? this.state.totalPokemon : 50}
           />,

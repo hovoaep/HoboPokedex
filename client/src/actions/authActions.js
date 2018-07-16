@@ -43,19 +43,11 @@ export const loginUser = userData => dispatch => {
 };
 
 export function setCurrentUser(decoded) {
-  console.log("real");
   return {
     type: SET_CURRENT_USER,
     payload: decoded
   };
 }
-
-export const temp = data => {
-  return {
-    type: SET_CURRENT_USER,
-    payload: data
-  };
-};
 
 // Log user out
 export const logoutUser = () => dispatch => {

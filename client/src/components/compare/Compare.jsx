@@ -89,7 +89,7 @@ class Compare extends Component {
     var BarChar = null;
     if (
       !this.props.profile.loading &&
-      this.state.pokemonChartData.length ==
+      this.state.pokemonChartData.length ===
         this.props.profile.userData.compare.length
     ) {
       const obj = {
