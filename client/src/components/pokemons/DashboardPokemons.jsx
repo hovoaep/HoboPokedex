@@ -94,9 +94,16 @@ class DashboardPokemons extends Component {
     });
   };
 
-  onSelectChange = event => {
-    let newPageSize = Number(event.target.value);
-    this.setState({ pageSize: newPageSize, page: 1 }, () => {
+  onSelectChange = event => {};
+
+  onSelectTypeChange = value => {
+    console.log(value);
+    this.setState({ page: 1, search: value });
+    this.props.history.push(`dashboard?type=${value}`);
+  };
+
+  onShowSizeChange = (current, pageSize) => {
+    this.setState({ pageSize: pageSize, page: 1 }, () => {
       if (!this.state.search) {
         fetchPokemons(
           this.state.page,
@@ -111,22 +118,12 @@ class DashboardPokemons extends Component {
     });
   };
 
-  onSelectTypeChange = value => {
-    console.log(value);
-    this.setState({ page: 1, search: value });
-    this.props.history.push(`dashboard?type=${value}`);
-  };
-
-  onShowSizeChange = (current, pageSize) => {
-    console.log(current, pageSize);
-  };
-
   onPageChange = (page, pageSize) => {
     console.log(11);
     console.log(page, pageSize);
   };
-
   render() {
+    console.log(this.state.pokemonList);
     const PokemonCardList = this.state.pokemonList.length ? (
       this.state.pokemonList.map((pokemon, i) => (
         <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />

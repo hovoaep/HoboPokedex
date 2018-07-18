@@ -6,6 +6,7 @@ import Spinner from "../common/Spinner";
 import Type from "../pokemons/Type";
 import axios from "axios";
 import { List } from "antd";
+import { EILSEQ } from "constants";
 
 class PokemonProfile extends Component {
   constructor() {
@@ -73,7 +74,8 @@ class PokemonProfile extends Component {
             profileInfo: {
               ...this.state.profileInfo,
               eggGroups: pokemonInfo.eggGroups
-            }
+            },
+            loading: true
           });
         });
         data.abilities.forEach(item =>
@@ -81,7 +83,6 @@ class PokemonProfile extends Component {
         );
         this.setState({
           pokemonChartData: temp,
-          loading: true,
           images: images,
           pokemonName: data.name,
           type,
@@ -112,11 +113,34 @@ class PokemonProfile extends Component {
     );
     const type = this.state.type.map(item => <Type key={item} type={item} />);
     const lists = this.state.profileInfo.abilities.length ? (
-      <List
-        bordered
-        dataSource={Object.entries(this.state.profileInfo)}
-        renderItem={item => <List.Item>{item}</List.Item>}
-      />
+      <ul className="list-group text-left">
+        <li className="list-group-item">
+          <strong>Weight</strong> - {this.state.profileInfo.weight}{" "}
+        </li>
+        <li className="list-group-item">
+          <strong>Height</strong> - {this.state.profileInfo.height}{" "}
+        </li>
+        <li className="list-group-item">
+          <strong>Egg Groups</strong>
+          <ul className="list-group">
+            {this.state.profileInfo.eggGroups.map(item => (
+              <li key={item} className="list-group-item">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li className="list-group-item">
+          <strong>Abilities</strong>
+          <ul className="list-group">
+            {this.state.profileInfo.abilities.map(item => (
+              <li key={item} className="list-group-item">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </li>
+      </ul>
     ) : (
       <span>Loading</span>
     );
@@ -129,22 +153,14 @@ class PokemonProfile extends Component {
               <div className="col-md-3">
                 <PokemonImageSlider images={this.state.images} />
                 <p>{this.state.pokemonDescription}</p>
-                {type}
+                <div className="ant-card-meta-description">{type}</div>
               </div>
               <div className="col-md-9">{elm}</div>
             </div>
-            <div className="row">
-              <div className="col-md-8">
+            <div className="row ">
+              <div className="col-md-12 mt-5">
                 <h3>Profile info</h3>
                 {lists}
-                {/* Height: {this.state.profileInfo.height}
-                Catch Rate: {this.state.profileInfo.catchRate}
-                Egg Groups: {this.state.profileInfo.eggGroups}
-                Abilities: {this.state.profileInfo.abilities}
-                Weight: {this.state.profileInfo.weight}
-                Gender Ratio: {this.state.profileInfo.genderRatio}
-                Hatch Steps: {this.state.profileInfo.hatchSteps}
-                EVs: {this.state.profileInfo.evs} */}
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, Icon } from "antd";
+import { Card, Icon, Popover } from "antd";
 import { connect } from "react-redux";
 import {
   likePokemon,
@@ -19,29 +19,35 @@ class Pokemon extends Component {
     this.state = {
       like: false,
       compare: false,
+      loading: true,
+      sliderAutoplay: false,
       pokemonImage: [],
       pokemonStats: [],
       pokemonTypes: [],
       name: ""
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     axios
       .get(this.props.url)
       .then(res => {
-        this.props.profile.userData.likes.includes(res.data.name)
-          ? this.setState({ like: true })
-          : null;
-        this.props.profile.userData.compare.includes(res.data.name)
-          ? this.setState({ compare: true })
-          : null;
+        if (this.props.profile.userData) {
+          this.props.profile.userData.likes.includes(res.data.name)
+            ? this.setState({ like: true })
+            : null;
+          this.props.profile.userData.compare.includes(res.data.name)
+            ? this.setState({ compare: true })
+            : null;
+        }
+
         this.setState({
           pokemonImage: Object.values(res.data.sprites)
             .filter(item => item !== null)
             .reverse(),
           pokemonStats: res.data.stats,
           pokemonTypes: res.data.types,
-          name: res.data.name
+          name: res.data.name,
+          loading: false
         });
       })
       .catch(err => {
@@ -70,7 +76,11 @@ class Pokemon extends Component {
         this.setState({ like: true });
       }
     } else {
-      alert("You need authenticated");
+      openNotificationWithIcon(
+        "error",
+        "Sorry, you need authorize",
+        "For authorize go to login page"
+      );
     }
   };
 
@@ -95,7 +105,11 @@ class Pokemon extends Component {
         );
       }
     } else {
-      alert("You need authenticated");
+      openNotificationWithIcon(
+        "error",
+        "Sorry, you need authorize",
+        "For authorize go to login page"
+      );
     }
   };
 
@@ -110,8 +124,8 @@ class Pokemon extends Component {
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 3000
+      autoplay: this.state.sliderAutoplay,
+      autoplaySpeed: 1000
     };
     const pokemonImageSlider = this.state.pokemonImage.map((item, key) => {
       return (
@@ -125,26 +139,45 @@ class Pokemon extends Component {
       );
     });
     const gridStyle = {
-      width: "25%",
+      width: this.props.width ? this.props.width : "25%",
       textAlign: "center"
     };
+    const content = (
+      <div>
+        <p>Content</p>
+        <p>Content</p>
+      </div>
+    );
     return (
       <div>
         <Card
           style={gridStyle}
           className="ant-card-grid"
           cover={<Slider {...sliderSettings}>{pokemonImageSlider}</Slider>}
+          loading={this.state.loading}
+          onMouseEnter={() => this.setState({ sliderAutoplay: true })}
+          onMouseLeave={() => this.setState({ sliderAutoplay: false })}
           actions={[
-            <Icon
-              type={this.state.like ? "heart" : "heart-o"}
-              onClick={this.onHeartClick}
-              style={{ fontSize: "25px" }}
-            />,
-            <Icon
-              type={this.state.compare ? "area-chart" : "line-chart"}
-              onClick={this.onCompareClick}
-              style={{ fontSize: "25px" }}
-            />
+            <Popover
+              content={this.state.like ? "Remove from likes" : "Add to like"}
+            >
+              <Icon
+                type={this.state.like ? "heart" : "heart-o"}
+                onClick={this.onHeartClick}
+                style={{ fontSize: "25px" }}
+              />
+            </Popover>,
+            <Popover
+              content={
+                this.state.compare ? "Remove from compare" : "Add to compare"
+              }
+            >
+              <Icon
+                type={this.state.compare ? "area-chart" : "line-chart"}
+                onClick={this.onCompareClick}
+                style={{ fontSize: "25px" }}
+              />
+            </Popover>
           ]}
         >
           <Meta

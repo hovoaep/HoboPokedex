@@ -3,7 +3,7 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { getCurrentProfile } from "./userDataActions";
 import { GET_ERRORS, SET_CURRENT_USER } from "./types";
-
+import { clearCurrentProfile } from "./userDataActions";
 // Register UserSET_CU
 export const registerUser = (userData, history) => dispatch => {
   axios
@@ -54,4 +54,5 @@ export const logoutUser = () => dispatch => {
   localStorage.removeItem("jwtToken");
   setAuthToken(false);
   dispatch(setCurrentUser({}));
+  dispatch(clearCurrentProfile());
 };

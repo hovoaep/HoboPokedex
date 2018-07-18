@@ -9,7 +9,6 @@ export const fetchPokemons = function(
   id = "",
   search = ""
 ) {
-  // this.setState({ pokemonList: [] });
   let api = "https://pokeapi.co/api/v2";
   switch (type) {
     case "search":

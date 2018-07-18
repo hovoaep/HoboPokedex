@@ -8,6 +8,7 @@ import Spinner from "../common/Spinner";
 import { addComparePokemon } from "../../actions/userDataActions";
 import Pokemon from "../pokemons/Pokemon";
 import PokemonChartHorzinal from "../pokemons/PokemonChartHorzinal";
+import { Card } from "antd";
 class Compare extends Component {
   constructor() {
     super();
@@ -23,6 +24,7 @@ class Compare extends Component {
   }
 
   componentWillMount() {
+    console.log(this.props.profile);
     this.props.profile.userData
       ? this.props.profile.userData.compare.forEach(item =>
           this.fetchPokemonStates(item)
@@ -31,11 +33,39 @@ class Compare extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    !this.props.profile.loading
-      ? null
-      : nextProps.profile.userData.compare.forEach(item =>
-          this.fetchPokemonStates(item)
-        );
+    // console.log(this.props.profile);
+    // console.log(
+    //   this.props.profile.userData !== null &&
+    //     this.props.profile.userData.compare.length !==
+    //       this.state.pokemonChartData.length
+    // );
+    // console.log(
+    //   !this.props.profile.loading &&
+    //     this.props.profile.userData !== null &&
+    //     this.props.profile.userData.compare.length !== this.state.compare
+    // );
+    // if (
+    //   !this.props.profile.loading &&
+    //   this.props.profile.userData !== null &&
+    //   this.props.profile.userData.compare.length !== this.state.compare
+    // ) {
+    //   nextProps.profile.userData.compare.forEach(item =>
+    //     this.fetchPokemonStates(item)
+    //   );
+    // }
+    console.log(nextProps);
+    if (!this.props.profile.loading) {
+      console.log(this.props.profile.userData);
+    }
+    if (
+      nextProps.profile.userData.compare.length !==
+      this.state.pokemonChartData.length
+    ) {
+      console.log(22222);
+      nextProps.profile.userData.compare.forEach(item =>
+        this.fetchPokemonStates(item)
+      );
+    }
   }
   fetchPokemonStates = pokemon => {
     console.log(pokemon);
@@ -106,35 +136,38 @@ class Compare extends Component {
           </div>
         );
       const api = "https://pokeapi.co/api/v2/pokemon";
-      PokemonCardList = !this.props.profile.loading ? (
-        this.props.profile.userData.compare.map((pokemon, i) => (
-          <div key={`${pokemon}${i}`}>
-            <div className="row">
-              <div className="col-4">
-                <Pokemon
-                  name={pokemon}
-                  key={pokemon}
-                  url={`${api}/${pokemon}`}
-                />
-              </div>
-              <div className="col-8">
-                <PokemonChartHorzinal
-                  data={{
-                    datasets: [this.state.pokemonChartData[i]],
-                    labels: this.state.pokemonChartLabel
-                  }}
-                />
+      PokemonCardList =
+        this.props.profile.userData.compare.length ===
+        this.state.pokemonChartData.length ? (
+          this.props.profile.userData.compare.map((pokemon, i) => (
+            <div key={`${pokemon}${i}`} className="mb-3">
+              <div className="row">
+                <div className="col-4">
+                  <Pokemon
+                    name={pokemon}
+                    key={pokemon}
+                    width="100%"
+                    url={`${api}/${pokemon}`}
+                  />
+                </div>
+                <div className="col-8">
+                  <PokemonChartHorzinal
+                    data={{
+                      datasets: [this.state.pokemonChartData[i]],
+                      labels: this.state.pokemonChartLabel
+                    }}
+                  />
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div>
+            <Spinner />
           </div>
-        ))
-      ) : (
-        <div>
-          <Spinner />
-        </div>
-      );
+        );
     }
-    console.log(this.props.profile.loading ? null : this.props.profile);
+
     return (
       <div>
         {BarChar !== null ? BarChar : <Spinner />}
