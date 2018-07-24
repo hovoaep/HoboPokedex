@@ -8,6 +8,8 @@ const profile = require("./routes/api/profile");
 
 const app = express();
 
+const path = require("path");
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
