@@ -7,6 +7,7 @@ const passport = require("passport");
 
 const email = require("../../email/email");
 const validateRegisterInput = require("../../validation/register");
+const validateUpdateUserInput = require("../../validation/updateUser");
 const validateLoginInput = require("../../validation/login");
 const User = require("../../models/User");
 
@@ -77,6 +78,42 @@ router.post("/register", (req, res) => {
   });
 });
 
+router.post(
+  "/updateUser",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateUpdateUserInput(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    User.findOne({ _id: req.user.id }).then(user => {
+      console.log(user);
+      if (user) {
+        console.log(2131);
+
+        newName = req.body.name;
+        newPassowrd = req.body.password ? req.body.password : "";
+        if (newPassowrd) {
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(newPassowrd, salt, (err, hash) => {
+              if (err) throw err;
+              user.password = hash;
+              user.name = newName;
+              user.save().then(user => {
+                res.status(200).json(user);
+              });
+            });
+          });
+        } else {
+          user.name = newName;
+          user.save().then(user => res.status(200).json(user));
+        }
+      }
+    });
+  }
+);
+
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
 
@@ -101,9 +138,7 @@ router.post("/login", (req, res) => {
         // res.json({ msg: "Success" });
         const payload = {
           id: user.id,
-          name: user.name,
-          likes: user.likes,
-          compare: user.compare
+          name: user.name
         };
         jwt.sign(
           payload,

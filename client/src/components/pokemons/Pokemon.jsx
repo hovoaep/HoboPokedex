@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Card, Icon, Popover } from "antd";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   likePokemon,
   unLikePokemon,
@@ -182,7 +183,7 @@ class Pokemon extends Component {
         >
           <Meta
             title={
-              <a href={`/pokemon/${this.state.name}`}> {this.state.name} </a>
+              <Link to={`/pokemon/${this.state.name}`}>{this.state.name}</Link>
             }
             description={PokemonTypesTags}
           />

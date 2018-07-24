@@ -4,12 +4,27 @@ import PropTypes from "prop-types";
 import Pokemon from "../pokemons/Pokemon";
 import Spinner from "../common/Spinner";
 import { bindActionCreators } from "redux";
-import { setCurrentUser } from "../../actions/authActions";
+import { setCurrentUser, updateUser } from "../../actions/authActions";
 // import { Link } from "react-router-dom";
 import { Card, Icon, Modal, Input } from "antd";
+import TextFieldGroup from "../common/TextFieldGroup";
 
 class Profile extends Component {
-  state = { visible: false };
+  state = {
+    visible: false,
+    name: "",
+    email: "",
+    oldPassword: "",
+    password: "",
+    password2: "",
+    errors: {}
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
 
   openUserInfoModal = () => {
     this.setState({
@@ -18,10 +33,19 @@ class Profile extends Component {
   };
 
   handleOk = e => {
-    console.log(e);
-    this.setState({
-      visible: false
-    });
+    const updateUser = {
+      name: this.state.name,
+      email: this.state.email,
+      oldPassword: this.state.oldPassword,
+      password: this.state.password,
+      password2: this.state.password2
+    };
+    this.props.updateUserInfo(updateUser);
+    if (this.state.errors) {
+      this.setState({
+        visible: false
+      });
+    }
   };
 
   handleCancel = e => {
@@ -29,6 +53,10 @@ class Profile extends Component {
     this.setState({
       visible: false
     });
+  };
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   render() {
@@ -44,6 +72,7 @@ class Profile extends Component {
       })
     );
     const { user } = this.props.auth;
+    const { errors } = this.state;
 
     return (
       <div>
@@ -67,10 +96,39 @@ class Profile extends Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <Input addonAfter="Enyer your name" value={user.name} />
-          <Input addonAfter="Old passowrd" />
-          <Input addonAfter="New Password" />
-          <Input addonAfter="Renter your password" />
+          <form noValidate onSubmit={this.onSubmit}>
+            <TextFieldGroup
+              placeholder="New name"
+              name="name"
+              value={this.state.name}
+              onChange={this.onChange}
+              error={errors.name}
+            />
+            <TextFieldGroup
+              placeholder="Old Password"
+              name="oldPassword"
+              type="password"
+              value={this.state.oldPassword}
+              onChange={this.onChange}
+              error={errors.oldPassword}
+            />
+            <TextFieldGroup
+              placeholder="New password"
+              name="password"
+              type="password"
+              value={this.state.password}
+              onChange={this.onChange}
+              error={errors.password}
+            />
+            <TextFieldGroup
+              placeholder="Confirm new password"
+              name="password2"
+              type="password"
+              value={this.state.password2}
+              onChange={this.onChange}
+              error={errors.password2}
+            />
+          </form>
         </Modal>
       </div>
     );
@@ -78,18 +136,22 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  profile: state.profile
+  profile: state.profile,
+  errors: state.errors
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      setCurrentUser
+      setCurrentUser,
+      updateUser
     },
     dispatch
   );

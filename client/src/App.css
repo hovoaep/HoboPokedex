@@ -131,3 +131,7 @@ li {
 .ant-popover-title {
   display: none;
 }
+
+.ant-card-cover {
+  min-height: 128px;
+}
