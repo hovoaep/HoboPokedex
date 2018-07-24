@@ -3,7 +3,7 @@
 
 
 Pokedex is a web app with mern stack for searching pokeomns. 
-
+Online demo https://hobopokedex.herokuapp.com/
 # Features!
 
   - Register/Login(with activate token).
