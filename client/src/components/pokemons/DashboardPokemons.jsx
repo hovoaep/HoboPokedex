@@ -23,6 +23,7 @@ class DashboardPokemons extends Component {
     this.onChange = this.onChange.bind(this);
   }
   componentWillMount() {
+    this.setState({ loading: true });
     fetchPokemons(0, 0, "type", pokemonTypes => {
       let temp = [];
       pokemonTypes.forEach(type => {
@@ -40,7 +41,7 @@ class DashboardPokemons extends Component {
       this.state.pageSize,
       "",
       (pokemonList, totalPokemon) =>
-        this.setState({ pokemonList, totalPokemon })
+        this.setState({ pokemonList, totalPokemon, loading: false })
     );
   }
 
@@ -54,6 +55,7 @@ class DashboardPokemons extends Component {
       reality = false;
     }
     if (reality) {
+      this.setState({ loading: true });
       fetchPokemons(
         this.state.page,
         this.state.pageSize,
@@ -63,7 +65,8 @@ class DashboardPokemons extends Component {
             pokemonListAll,
             totalPokemon: pokemonListAll.length,
             pokemonList: pokemonListAll.slice(0, this.state.pageSize),
-            search: type
+            search: type,
+            loading: false
           }),
         "",
         type
@@ -77,40 +80,45 @@ class DashboardPokemons extends Component {
   }
 
   handlePageChange = (pageNumber, pageSize) => {
-    this.setState({ page: pageNumber, pageSize: pageSize }, () => {
-      if (this.state.search) {
-        let length = pageNumber * this.state.pageSize;
-        let newPokemons = this.state.pokemonListAll.slice(length, length + 10);
-        this.setState({ pokemonList: newPokemons });
-      } else {
-        fetchPokemons(
-          this.state.page,
-          this.state.pageSize,
-          this.state.search,
-          (pokemonList, totalPokemon) =>
-            this.setState({ pokemonList, totalPokemon })
-        );
+    this.setState(
+      { page: pageNumber, pageSize: pageSize, loading: true },
+      () => {
+        if (this.state.search) {
+          let length = pageNumber * this.state.pageSize;
+          let newPokemons = this.state.pokemonListAll.slice(
+            length,
+            length + 10
+          );
+          this.setState({ pokemonList: newPokemons, loading: false });
+        } else {
+          fetchPokemons(
+            this.state.page,
+            this.state.pageSize,
+            this.state.search,
+            (pokemonList, totalPokemon) =>
+              this.setState({ pokemonList, totalPokemon, loading: false })
+          );
+        }
       }
-    });
+    );
   };
 
   onSelectChange = event => {};
 
   onSelectTypeChange = value => {
-    console.log(value);
     this.setState({ page: 1, search: value });
     this.props.history.push(`dashboard?type=${value}`);
   };
 
   onShowSizeChange = (current, pageSize) => {
-    this.setState({ pageSize: pageSize, page: 1 }, () => {
+    this.setState({ pageSize: pageSize, page: 1, loading: true }, () => {
       if (!this.state.search) {
         fetchPokemons(
           this.state.page,
           this.state.pageSize,
           this.state.search,
           (pokemonList, totalPokemon) =>
-            this.setState({ pokemonList, totalPokemon })
+            this.setState({ pokemonList, totalPokemon, loading: false })
         );
       } else {
         this.handlePageChange(this.state.page);
@@ -118,13 +126,9 @@ class DashboardPokemons extends Component {
     });
   };
 
-  onPageChange = (page, pageSize) => {
-    console.log(11);
-    console.log(page, pageSize);
-  };
   render() {
-    console.log(this.state.pokemonList);
-    const PokemonCardList = this.state.pokemonList.length ? (
+    console.log(this.state.pokemonList.length);
+    const PokemonCardList = !this.state.loading ? (
       this.state.pokemonList.map((pokemon, i) => (
         <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
       ))

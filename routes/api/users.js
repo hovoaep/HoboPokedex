@@ -88,10 +88,7 @@ router.post(
       return res.status(400).json(errors);
     }
     User.findOne({ _id: req.user.id }).then(user => {
-      console.log(user);
       if (user) {
-        console.log(2131);
-
         newName = req.body.name;
         newPassowrd = req.body.password ? req.body.password : "";
         if (newPassowrd) {
@@ -101,13 +98,43 @@ router.post(
               user.password = hash;
               user.name = newName;
               user.save().then(user => {
-                res.status(200).json(user);
+                const payload = {
+                  id: user.id,
+                  name: user.name
+                };
+                jwt.sign(
+                  payload,
+                  keys.secretOrKey,
+                  { expiresIn: 3600 },
+                  (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  }
+                );
               });
             });
           });
         } else {
           user.name = newName;
-          user.save().then(user => res.status(200).json(user));
+          user.save().then(user => {
+            const payload = {
+              id: user.id,
+              name: user.name
+            };
+            jwt.sign(
+              payload,
+              keys.secretOrKey,
+              { expiresIn: 3600 },
+              (err, token) => {
+                res.json({
+                  success: true,
+                  token: "Bearer " + token
+                });
+              }
+            );
+          });
         }
       }
     });

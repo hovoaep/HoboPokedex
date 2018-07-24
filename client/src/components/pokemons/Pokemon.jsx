@@ -149,6 +149,24 @@ class Pokemon extends Component {
         <p>Content</p>
       </div>
     );
+    var likeIconType = "";
+    var compareIconType = "";
+    var likeIconColor = "";
+    var compareIconColor = "";
+    if (this.state.like) {
+      likeIconType = "heart";
+      likeIconColor = "#08c";
+    } else {
+      likeIconType = "heart-o";
+      likeIconColor = "#333";
+    }
+    if (this.state.compare) {
+      compareIconType = "area-chart";
+      compareIconColor = "#08c";
+    } else {
+      compareIconType = "line-chart";
+      compareIconColor = "#333";
+    }
     return (
       <div>
         <Card
@@ -163,9 +181,9 @@ class Pokemon extends Component {
               content={this.state.like ? "Remove from likes" : "Add to like"}
             >
               <Icon
-                type={this.state.like ? "heart" : "heart-o"}
+                type={likeIconType}
                 onClick={this.onHeartClick}
-                style={{ fontSize: "25px" }}
+                style={{ fontSize: "25px", color: likeIconColor }}
               />
             </Popover>,
             <Popover
@@ -174,9 +192,9 @@ class Pokemon extends Component {
               }
             >
               <Icon
-                type={this.state.compare ? "area-chart" : "line-chart"}
+                type={compareIconType}
                 onClick={this.onCompareClick}
-                style={{ fontSize: "25px" }}
+                style={{ fontSize: "25px", color: compareIconColor }}
               />
             </Popover>
           ]}

@@ -5,8 +5,6 @@ import { fetchPokemons } from "../helpers/helper";
 import Spinner from "../common/Spinner";
 import Type from "../pokemons/Type";
 import axios from "axios";
-import { List } from "antd";
-import { EILSEQ } from "constants";
 
 class PokemonProfile extends Component {
   constructor() {

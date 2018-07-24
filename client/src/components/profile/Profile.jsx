@@ -4,16 +4,15 @@ import PropTypes from "prop-types";
 import Pokemon from "../pokemons/Pokemon";
 import Spinner from "../common/Spinner";
 import { bindActionCreators } from "redux";
-import { setCurrentUser, updateUser } from "../../actions/authActions";
+import { setCurrentUser, updateUserInfo } from "../../actions/authActions";
 // import { Link } from "react-router-dom";
-import { Card, Icon, Modal, Input } from "antd";
+import { Card, Icon, Modal } from "antd";
 import TextFieldGroup from "../common/TextFieldGroup";
 
 class Profile extends Component {
   state = {
     visible: false,
     name: "",
-    email: "",
     oldPassword: "",
     password: "",
     password2: "",
@@ -35,7 +34,6 @@ class Profile extends Component {
   handleOk = e => {
     const updateUser = {
       name: this.state.name,
-      email: this.state.email,
       oldPassword: this.state.oldPassword,
       password: this.state.password,
       password2: this.state.password2
@@ -151,7 +149,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setCurrentUser,
-      updateUser
+      updateUserInfo
     },
     dispatch
   );

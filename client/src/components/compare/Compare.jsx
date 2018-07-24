@@ -8,7 +8,6 @@ import Spinner from "../common/Spinner";
 import { addComparePokemon } from "../../actions/userDataActions";
 import Pokemon from "../pokemons/Pokemon";
 import PokemonChartHorzinal from "../pokemons/PokemonChartHorzinal";
-import { Card } from "antd";
 class Compare extends Component {
   constructor() {
     super();
