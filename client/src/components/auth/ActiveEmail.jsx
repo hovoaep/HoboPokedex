@@ -1,7 +1,20 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 class ActiveEmail extends Component {
+  componentWillMount() {
+    if (this.props.match.params.id) {
+      axios
+        .get(`/api/users/verify/${this.props.match.params.id}`)
+        .then(res => {
+          this.props.history.push(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
   render() {
+    console.log();
     return (
       <div>
         <h2>One more step.</h2>

@@ -56,7 +56,7 @@ router.get("/verify/:activeToken", (req, res) => {
       user.activeToken = "";
       user
         .save()
-        .then(verifaydUser => res.status(200).redirect("/login"))
+        .then(verifaydUser => res.status(200).json("/login"))
 
         .catch(err => {
           res.status(400).json("Somthing go wroing", err);

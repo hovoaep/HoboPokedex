@@ -49,8 +49,8 @@ class App extends Component {
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/activeemail" component={ActiveEmail} />
-
+              {/* <Route exact path="/activeemail" component={ActiveEmail} /> */}
+              <Route exact path="/activeemail/:id" component={ActiveEmail} />
               <Route exact path="/dashboard" component={DashboardPokemons} />
               <Route exact path="/pokemon/:id" component={PokemonProfile} />
               <Switch>
