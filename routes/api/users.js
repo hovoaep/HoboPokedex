@@ -6,9 +6,7 @@ const randomstring = require("randomstring");
 const keys = require("../../config/keys");
 const passport = require("passport");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(
-  "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"
-);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // const Mailjet = require("node-mailjet").connect(
 //   "758c820bde38079f64604245e658c816",
