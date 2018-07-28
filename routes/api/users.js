@@ -5,6 +5,25 @@ const jwt = require("jsonwebtoken");
 const randomstring = require("randomstring");
 const keys = require("../../config/keys");
 const passport = require("passport");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(
+  "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"
+);
+
+// const Mailjet = require("node-mailjet").connect(
+//   "758c820bde38079f64604245e658c816",
+//   "a5a8935eba36be9750c0cd0c2c2e5774"
+// );
+
+const msg = function(email, html) {
+  return {
+    to: email,
+    from: "admin@hobopokedex.herokuapp.com",
+    subject: "Activate HoboPokedex Account",
+    text: "Activate HoboPokedex account",
+    html: html
+  };
+};
 
 const email = require("../../email/email");
 const validateRegisterInput = require("../../validation/register");
@@ -12,16 +31,33 @@ const validateUpdateUserInput = require("../../validation/updateUser");
 const validateLoginInput = require("../../validation/login");
 const User = require("../../models/User");
 
-router.get("/test", (req, res) => res.json({ msg: "Users Works" }));
+const mailjet = require("node-mailjet").connect(
+  "758c820bde38079f64604245e658c816",
+  "a5a8935eba36be9750c0cd0c2c2e5774",
+  {
+    url: "api.mailjet.com", // default is the API url
+    version: "v3.1", // default is '/v3'
+    perform_api_call: true // used for tests. default is true
+  }
+);
 
-router.post("/verify/:activeToken", (req, res) => {
+// .then(res => console.log(res))
+// .catch(err => console.log(err));
+
+router.get("/test", (req, res) => {
+  // res.json({ msg: "Users Works" })
+  res.redirect("/login");
+});
+
+router.get("/verify/:activeToken", (req, res) => {
   User.findOne({ activeToken: req.params.activeToken })
     .then(user => {
       user.active = true;
       user.activeToken = "";
       user
         .save()
-        .then(verifaydUser => res.status(200).json("Now you can login in :)"))
+        .then(verifaydUser => res.status(200).redirect("/login"))
+
         .catch(err => {
           res.status(400).json("Somthing go wroing", err);
         });
@@ -53,29 +89,34 @@ router.post("/register", (req, res) => {
           newUser.activeToken = randomstring.generate();
           newUser.password = hash;
           newUser.save().then(user => {
-            res.status(200).json("Now you need a verify your account");
-            console.log(user);
+            res.status(201).json(user.email);
             let html = `
-                <h3>Hello and welcome to hoboshop</h3>
+                <h1>Hello and welcome to Hobo Pokedex</h1>
                 <h5>Thank your for register, one more step and you can go to shop somthing, you need a verifay you<h5/>
                 <h6>For verfay pleas click this link</h6>
                 <a href="http://localhost:5000/api/users/verify/${
                   user.activeToken
                 }">Verify accaount</a>
               `;
-            email
-              .sendEmail(
-                "admin@hoboshop.com",
-                "hovoaep@gmail.com",
-                "Plesa verifay",
-                html
-              )
-              .then(res => console.log(res))
-              .catch(err => console.log(err));
+            sgMail.send(msg(user.email, html));
           });
         });
       });
     }
+  });
+});
+
+router.post("/resendemailactive", (req, res) => {
+  User.findOne({ email: req.body.email }).then(user => {
+    let html = `
+                <h1>Hello and welcome to Hobo Pokedex</h1>
+                <h5>Thank your for register, one more step and you can go to shop somthing, you need a verifay you<h5/>
+                <h6>For verfay pleas click this link</h6>
+                <a href="http://localhost:5000/api/users/verify/${
+                  user.activeToken
+                }">Verify accaount</a>
+              `;
+    sgMail.send(msg(user.email, html));
   });
 });
 

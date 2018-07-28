@@ -19,6 +19,7 @@ import Footer from "./components/layout/Footer";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import ActiveEmail from "./components/auth/ActiveEmail";
 import DashboardPokemons from "./components/pokemons/DashboardPokemons";
 import Profile from "./components/profile/Profile";
 import PokemonProfile from "./components/pokemonProfile/PokemonProfile";
@@ -48,6 +49,8 @@ class App extends Component {
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/activeemail" component={ActiveEmail} />
+
               <Route exact path="/dashboard" component={DashboardPokemons} />
               <Route exact path="/pokemon/:id" component={PokemonProfile} />
               <Switch>

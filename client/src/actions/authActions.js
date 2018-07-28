@@ -2,14 +2,38 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { getCurrentProfile } from "./userDataActions";
-import { GET_ERRORS, SET_CURRENT_USER } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, ACTIVE_EMAIL } from "./types";
 import { clearCurrentProfile } from "./userDataActions";
 // Register UserSET_CU
 
 export const registerUser = (userData, history) => dispatch => {
   axios
     .post("/api/users/register", userData)
-    .then(res => history.push("/login"))
+    .then(res => {
+      dispatch({
+        type: ACTIVE_EMAIL,
+        payload: res.data
+      });
+      history.push("/activeemail");
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+export const resendEmailActive = email => dispatch => {
+  axios
+    .post("/api/users/resendemailactive", email)
+    .then(res => {
+      dispatch({
+        type: ACTIVE_EMAIL,
+        payload: res.data
+      });
+      // history.push("/activeemail");
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

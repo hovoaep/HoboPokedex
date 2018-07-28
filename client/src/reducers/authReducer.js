@@ -1,9 +1,10 @@
 import isEmpty from "../validation/is-empty";
 
-import { SET_CURRENT_USER } from "../actions/types";
+import { SET_CURRENT_USER, ACTIVE_EMAIL } from "../actions/types";
 
 const initialState = {
   isAuthenticated: false,
+  isActiveEmail: "",
   user: {}
 };
 
@@ -15,7 +16,11 @@ export default function(state = initialState, action) {
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload
       };
-
+    case ACTIVE_EMAIL:
+      return {
+        ...state,
+        isActiveEmail: action.payload
+      };
     default:
       return state;
   }
