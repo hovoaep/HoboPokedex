@@ -1,7 +1,7 @@
 {
   "name": "HoboPokedex",
   "version": "1.0.0",
-  "description": "HoboPokedex",
+  "description": "Pokedex is a web app with mern stack for searching pokeomns. Online demo https://hobopokedex.herokuapp.com/",
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",

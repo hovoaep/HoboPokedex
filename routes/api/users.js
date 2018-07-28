@@ -106,6 +106,18 @@ router.post("/register", (req, res) => {
   });
 });
 
+sgMail.send(
+  msg(
+    "cyberpirat666@gmail.com",
+    `
+<h1>Hello and welcome to Hobo Pokedex</h1>
+<h5>Thank your for register, one more step and you can go to shop somthing, you need a verifay you<h5/>
+<h6>For verfay pleas click this link</h6>
+<a href="https://hobopokedex.herokuapp.com/activeemail/dasda">Verify accaount</a>
+`
+  )
+);
+
 router.post("/resendemailactive", (req, res) => {
   User.findOne({ email: req.body.email }).then(user => {
     let html = `

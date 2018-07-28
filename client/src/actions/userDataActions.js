@@ -26,8 +26,6 @@ export const getCurrentProfile = () => dispatch => {
 };
 
 export const likePokemon = pokemonId => dispatch => {
-  console.log(pokemonId);
-  // dispatch(setProfileLoading());
   axios
     .post(`/api/profile/like/${pokemonId}`)
     .then(res => {
@@ -47,7 +45,6 @@ export const likePokemon = pokemonId => dispatch => {
 };
 
 export const unLikePokemon = data => dispatch => {
-  // dispatch(setProfileLoading());
   const { pokemonId } = data;
   axios
     .delete(`/api/profile/like/${pokemonId}`)
@@ -66,7 +63,6 @@ export const unLikePokemon = data => dispatch => {
 };
 
 export const addComparePokemon = pokemonId => dispatch => {
-  // dispatch(setProfileLoading());
   axios
     .post(`/api/profile/compare/${pokemonId}`)
     .then(res => {
@@ -84,7 +80,6 @@ export const addComparePokemon = pokemonId => dispatch => {
 };
 
 export const deleteComparePokemon = pokemonId => dispatch => {
-  // dispatch(setProfileLoading());
   axios
     .delete(`/api/profile/compare/${pokemonId}`)
     .then(res => {

@@ -12,7 +12,9 @@ class ActiveEmail extends Component {
         .catch(err => console.log(err));
     }
   }
-
+  resendMail = () => {
+    console.log(this.props);
+  };
   render() {
     console.log();
     return (

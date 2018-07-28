@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import Pagination from "react-js-pagination";
 import Pokemon from "./Pokemon";
 import Spinner from "../common/Spinner";
 import { fetchPokemons } from "../helpers/helper";
@@ -36,16 +35,37 @@ class DashboardPokemons extends Component {
       });
       this.setState({ pokemonTypes: temp });
     });
-    fetchPokemons(
-      this.state.page,
-      this.state.pageSize,
-      "",
-      (pokemonList, totalPokemon) =>
-        this.setState({ pokemonList, totalPokemon, loading: false })
-    );
+    let url = new URLSearchParams(this.props.location.search);
+    let type = url.get("type");
+    if (!type) {
+      fetchPokemons(
+        this.state.page,
+        this.state.pageSize,
+        "",
+        (pokemonList, totalPokemon) =>
+          this.setState({ pokemonList, totalPokemon, loading: false })
+      );
+    }
+    if (type) {
+      fetchPokemons(
+        this.state.page,
+        this.state.pageSize,
+        "search",
+        pokemonListAll =>
+          this.setState({
+            pokemonListAll,
+            totalPokemon: pokemonListAll.length,
+            pokemonList: pokemonListAll.slice(0, this.state.pageSize),
+            search: type,
+            loading: false
+          }),
+        "",
+        type
+      );
+    } else {
+    }
   }
-
-  shouldComponentUpdate(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     let url = new URLSearchParams(nextProps.location.search);
     let type = url.get("type");
     let reality = false;
@@ -72,7 +92,6 @@ class DashboardPokemons extends Component {
         type
       );
     }
-    return true;
   }
 
   onChange(e) {
@@ -127,7 +146,6 @@ class DashboardPokemons extends Component {
   };
 
   render() {
-    console.log(this.state.pokemonList.length);
     const PokemonCardList = !this.state.loading ? (
       this.state.pokemonList.map((pokemon, i) => (
         <Pokemon name={pokemon.name} key={pokemon.name} url={pokemon.url} />
