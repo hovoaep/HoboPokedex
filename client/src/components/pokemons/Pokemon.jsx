@@ -32,10 +32,12 @@ class Pokemon extends Component {
     axios
       .get(this.props.url)
       .then(res => {
-        if (this.props.profile.userData) {
+        if (this.props.profile.userData.likes) {
           this.props.profile.userData.likes.includes(res.data.name)
             ? this.setState({ like: true })
             : null;
+        }
+        if (this.props.profile.userData.compare) {
           this.props.profile.userData.compare.includes(res.data.name)
             ? this.setState({ compare: true })
             : null;
