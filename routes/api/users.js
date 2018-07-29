@@ -8,11 +8,6 @@ const passport = require("passport");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// const Mailjet = require("node-mailjet").connect(
-//   "758c820bde38079f64604245e658c816",
-//   "a5a8935eba36be9750c0cd0c2c2e5774"
-// );
-
 const msg = function(email, html) {
   return {
     to: email,
@@ -103,18 +98,6 @@ router.post("/register", (req, res) => {
     }
   });
 });
-
-sgMail.send(
-  msg(
-    "cyberpirat666@gmail.com",
-    `
-<h1>Hello and welcome to Hobo Pokedex</h1>
-<h5>Thank your for register, one more step and you can go to shop somthing, you need a verifay you<h5/>
-<h6>For verfay pleas click this link</h6>
-<a href="https://hobopokedex.herokuapp.com/activeemail/dasda">Verify accaount</a>
-`
-  )
-);
 
 router.post("/resendemailactive", (req, res) => {
   User.findOne({ email: req.body.email }).then(user => {
