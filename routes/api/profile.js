@@ -15,6 +15,7 @@ router.get(
     Profile.findOne({ user: req.user.id })
       .populate("name")
       .then(profile => {
+        console.log(profile);
         if (!profile) {
           new Profile({
             likes: [],
@@ -23,10 +24,12 @@ router.get(
           })
             .save()
             .then(profile => {
+              console.log(profile);
               res.status(200).json(profile);
             });
+        } else {
+          res.json(profile);
         }
-        res.json(profile);
       })
       .catch(err => res.status(404).json(err));
   }
