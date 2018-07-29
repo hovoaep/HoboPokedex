@@ -18,28 +18,13 @@ const msg = function(email, html) {
   };
 };
 
-const email = require("../../email/email");
 const validateRegisterInput = require("../../validation/register");
 const validateUpdateUserInput = require("../../validation/updateUser");
 const validateLoginInput = require("../../validation/login");
 const User = require("../../models/User");
 
-const mailjet = require("node-mailjet").connect(
-  "758c820bde38079f64604245e658c816",
-  "a5a8935eba36be9750c0cd0c2c2e5774",
-  {
-    url: "api.mailjet.com", // default is the API url
-    version: "v3.1", // default is '/v3'
-    perform_api_call: true // used for tests. default is true
-  }
-);
-
-// .then(res => console.log(res))
-// .catch(err => console.log(err));
-
 router.get("/test", (req, res) => {
-  // res.json({ msg: "Users Works" })
-  res.redirect("/login");
+  res.json({ msg: "Users Works" });
 });
 
 router.get("/verify/:activeToken", (req, res) => {

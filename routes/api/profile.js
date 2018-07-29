@@ -12,13 +12,19 @@ router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const errors = {};
     Profile.findOne({ user: req.user.id })
-      .populate("user", ["name"])
+      .populate("name")
       .then(profile => {
         if (!profile) {
-          errors.noprofile = "There is no profile for this user";
-          return res.status(404).json(errors);
+          new Profile({
+            likes: [],
+            compare: [],
+            user: req.user.id
+          })
+            .save()
+            .then(profile => {
+              res.status(200).json(profile);
+            });
         }
         res.json(profile);
       })
@@ -31,8 +37,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const pokemonId = req.params.pokemonId;
-    console.log(pokemonId);
-
     Profile.findOne({ user: req.user.id }).then(user => {
       user.likes.push(pokemonId);
       user.save().then(data => res.json(data));
@@ -45,8 +49,6 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const pokemonId = req.params.pokemonId;
-    console.log(pokemonId);
-
     Profile.findOne({ user: req.user.id })
       .then(user => {
         const removeIndex = user.likes.indexOf(pokemonId);
