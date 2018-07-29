@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+import { resendEmailActive } from "../../actions/authActions";
 
 class ActiveEmail extends Component {
   componentWillMount() {
-    if (this.props.match.params.id) {
+    let url = new URLSearchParams(this.props.location.search);
+    let token = url.get("token");
+    if (token) {
       axios
-        .get(`/api/users/verify/${this.props.match.params.id}`)
+        .get(`/api/users/verify/${token}`)
         .then(res => {
           this.props.history.push(res.data);
         })
@@ -13,10 +17,16 @@ class ActiveEmail extends Component {
     }
   }
   resendMail = () => {
-    console.log(this.props);
+    if (this.props.auth.isActiveEmail) {
+      let data = {
+        email: this.props.auth.isActiveEmail
+      };
+      this.props.resendEmailActive(data);
+    } else {
+      alert("somthing wrong");
+    }
   };
   render() {
-    console.log();
     return (
       <div>
         <h2>One more step.</h2>
@@ -27,7 +37,11 @@ class ActiveEmail extends Component {
         <p>After that you can Login your accout page</p>
         <p>
           If you not recive email, click this button{" "}
-          <button className="btn btn-submit" type="button">
+          <button
+            onClick={this.resendMail}
+            className="btn btn-submit"
+            type="button"
+          >
             Resend Email
           </button>
         </p>
@@ -36,4 +50,12 @@ class ActiveEmail extends Component {
   }
 }
 
-export default ActiveEmail;
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { resendEmailActive }
+)(ActiveEmail);

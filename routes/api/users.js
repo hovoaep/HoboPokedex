@@ -72,7 +72,7 @@ router.post("/register", (req, res) => {
                 <h1>Hello and welcome to Hobo Pokedex</h1>
                 <h5>Thank your for register, one more step and you can go to shop somthing, you need a verifay you<h5/>
                 <h6>For verfay pleas click this link</h6>
-                <a href="https://hobopokedex.herokuapp.com/activeemail/${
+                <a href="https://hobopokedex.herokuapp.com/activeemail?token=${
                   user.activeToken
                 }">Verify accaount</a>
               `;
@@ -90,11 +90,12 @@ router.post("/resendemailactive", (req, res) => {
                 <h1>Hello and welcome to Hobo Pokedex</h1>
                 <h5>Thank your for register, one more step and you can go to shop somthing, you need a verifay you<h5/>
                 <h6>For verfay pleas click this link</h6>
-                <a href="https://hobopokedex.herokuapp.com/activeemail/${
+                <a href="https://hobopokedex.herokuapp.com/activeemail?token=${
                   user.activeToken
                 }">Verify accaount</a>
               `;
     sgMail.send(msg(user.email, html));
+    res.status(200).json(user.email);
   });
 });
 
