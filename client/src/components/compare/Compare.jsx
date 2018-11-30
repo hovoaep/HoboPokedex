@@ -32,27 +32,6 @@ class Compare extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log(this.props.profile);
-    // console.log(
-    //   this.props.profile.userData !== null &&
-    //     this.props.profile.userData.compare.length !==
-    //       this.state.pokemonChartData.length
-    // );
-    // console.log(
-    //   !this.props.profile.loading &&
-    //     this.props.profile.userData !== null &&
-    //     this.props.profile.userData.compare.length !== this.state.compare
-    // );
-    // if (
-    //   !this.props.profile.loading &&
-    //   this.props.profile.userData !== null &&
-    //   this.props.profile.userData.compare.length !== this.state.compare
-    // ) {
-    //   nextProps.profile.userData.compare.forEach(item =>
-    //     this.fetchPokemonStates(item)
-    //   );
-    // }
-    console.log(nextProps);
     if (!this.props.profile.loading) {
       console.log(this.props.profile.userData);
     }
